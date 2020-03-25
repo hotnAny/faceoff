@@ -1,0 +1,14 @@
+## non-touching activities
+- read magazines
+- organize couch
+- jumping jack
+- drinking water
+- washing and dry hands
+- typing a paragraph
+- spray disinfectioners
+- checking time
+- throw balls with dogs
+- cleaning with a broom
+- yawning/pull ups
+- check time
+- 

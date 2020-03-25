@@ -19,6 +19,7 @@
 		1F56DFF024293C2A00E73ED5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F56DFEF24293C2A00E73ED5 /* Assets.xcassets */; };
 		1F56DFF324293C2A00E73ED5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F56DFF224293C2A00E73ED5 /* Preview Assets.xcassets */; };
 		1F56E0042429730500E73ED5 /* AccelerometerInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F56E0032429730500E73ED5 /* AccelerometerInterfaceController.swift */; };
+		1F8F5E4C242AB6C90048654A /* FaceOffLearner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8F5E4B242AB6C90048654A /* FaceOffLearner.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +81,7 @@
 		1F56DFF424293C2A00E73ED5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1F56DFF524293C2A00E73ED5 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
 		1F56E0032429730500E73ED5 /* AccelerometerInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccelerometerInterfaceController.swift; sourceTree = "<group>"; };
+		1F8F5E4B242AB6C90048654A /* FaceOffLearner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceOffLearner.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +137,7 @@
 				1F56DFF524293C2A00E73ED5 /* PushNotificationPayload.apns */,
 				1F56DFF124293C2A00E73ED5 /* Preview Content */,
 				1F56E0032429730500E73ED5 /* AccelerometerInterfaceController.swift */,
+				1F8F5E4B242AB6C90048654A /* FaceOffLearner.swift */,
 			);
 			path = "FaceOff WatchKit Extension";
 			sourceTree = "<group>";
@@ -219,6 +222,7 @@
 					};
 					1F56DFDF24293C2900E73ED5 = {
 						CreatedOnToolsVersion = 11.3.1;
+						LastSwiftMigration = 1130;
 					};
 				};
 			};
@@ -276,6 +280,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F56DFE824293C2900E73ED5 /* HostingController.swift in Sources */,
+				1F8F5E4C242AB6C90048654A /* FaceOffLearner.swift in Sources */,
 				1F56DFE624293C2900E73ED5 /* ContentView.swift in Sources */,
 				1F56DFEC24293C2900E73ED5 /* NotificationController.swift in Sources */,
 				1F56E0042429730500E73ED5 /* AccelerometerInterfaceController.swift in Sources */,
@@ -429,6 +434,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"FaceOff WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = 63SZ7D2R98;
@@ -443,6 +449,8 @@
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "FaceOff WatchKit Extension/FaceOff WatchKit Extension-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 6.1;
@@ -453,6 +461,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"FaceOff WatchKit Extension/Preview Content\"";
 				DEVELOPMENT_TEAM = 63SZ7D2R98;
@@ -467,6 +476,7 @@
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "FaceOff WatchKit Extension/FaceOff WatchKit Extension-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 6.1;
