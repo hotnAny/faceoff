@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="15705" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="GVU-yr-cuI">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="15705" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="S8r-Qp-yg8">
     <device id="watch38"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="15501"/>
     </dependencies>
     <scenes>
-        <!--Accelerometer Interface Controller-->
+        <!--Face Off Training-->
         <scene sceneID="mUz-TF-bdY">
             <objects>
-                <controller id="GVU-yr-cuI" customClass="AccelerometerInterfaceController" customModule="FaceOff_WatchKit_Extension">
+                <controller id="GVU-yr-cuI" customClass="FaceOffTraining" customModule="FaceOff_WatchKit_Extension">
                     <items>
-                        <label alignment="left" text="FPS: " id="M36-iJ-FbE"/>
                         <switch width="1" alignment="left" value="YES" title="Touching" id="6cr-mo-uqW">
                             <connections>
                                 <action selector="switchToggled:" destination="GVU-yr-cuI" id="0kT-rE-Hcn"/>
                             </connections>
                         </switch>
-                        <button width="1" height="78" alignment="center" verticalAlignment="center" title="Start" id="M83-Br-bvP">
+                        <switch width="1" alignment="left" value="YES" title="In the wild" id="VS9-bv-9tx"/>
+                        <button width="1" height="67" alignment="center" verticalAlignment="center" title="Start" id="M83-Br-bvP">
                             <gestureRecognizers>
                                 <tapGestureRecognizer id="dSw-cm-eKX"/>
                             </gestureRecognizers>
@@ -29,35 +29,49 @@
                     </items>
                     <connections>
                         <outlet property="btnStart" destination="M83-Br-bvP" id="gaR-W6-7r1"/>
-                        <outlet property="lbFPS" destination="M36-iJ-FbE" id="d4R-yW-NOI"/>
                         <outlet property="swTouching" destination="6cr-mo-uqW" id="bGR-rI-chK"/>
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="261" y="-71"/>
+            <point key="canvasLocation" x="488" y="-70"/>
         </scene>
-        <!--Static Notification Interface Controller-->
-        <scene sceneID="AEw-b0-oYE">
+        <!--Face Off-->
+        <scene sceneID="bKa-le-8VO">
             <objects>
-                <notificationController id="YCC-NB-fut">
+                <controller id="S8r-Qp-yg8" customClass="FaceOff" customModule="FaceOff_WatchKit_Extension">
                     <items>
-                        <label alignment="left" text="Alert Label" numberOfLines="0" id="IdU-wH-bcW"/>
+                        <button width="1" height="64" alignment="left" verticalAlignment="center" title="Training" id="biH-EI-NTL">
+                            <fontDescription key="font" type="system" pointSize="24"/>
+                            <connections>
+                                <segue destination="GVU-yr-cuI" kind="push" id="DNR-fg-cck"/>
+                            </connections>
+                        </button>
+                        <button width="1" height="64" alignment="left" verticalAlignment="center" title="Testing" id="4vx-p3-5uE">
+                            <fontDescription key="font" type="system" pointSize="24"/>
+                            <connections>
+                                <segue destination="1DT-va-9mu" kind="push" id="wxU-TV-i16"/>
+                            </connections>
+                        </button>
                     </items>
-                    <notificationCategory key="notificationCategory" identifier="myCategory" id="JfB-70-Muf"/>
-                    <connections>
-                        <outlet property="notificationAlertLabel" destination="IdU-wH-bcW" id="JKC-fr-R95"/>
-                        <segue destination="eXb-UN-Cd0" kind="relationship" relationship="dynamicInteractiveNotificationInterface" id="mpB-YA-K8N"/>
-                    </connections>
-                </notificationController>
+                </controller>
             </objects>
-            <point key="canvasLocation" x="187" y="462"/>
+            <point key="canvasLocation" x="187" y="37"/>
         </scene>
-        <!--Notification Controller-->
-        <scene sceneID="Niz-AI-uX2">
+        <!--Face Off Testing-->
+        <scene sceneID="AM9-wZ-yfn">
             <objects>
-                <controller id="eXb-UN-Cd0" customClass="NotificationController" customModule="FaceOff_WatchKit_App" customModuleProvider="target"/>
+                <controller id="1DT-va-9mu" customClass="FaceOffTesting" customModule="FaceOff_WatchKit_Extension">
+                    <items>
+                        <label width="134" height="81" alignment="center" verticalAlignment="center" alpha="0.0" text="Don't Touch Your Face!" textAlignment="center" numberOfLines="2" id="6Ru-6b-Boq">
+                            <fontDescription key="font" type="system" pointSize="24"/>
+                        </label>
+                    </items>
+                    <connections>
+                        <outlet property="lbWarning" destination="6Ru-6b-Boq" id="PAa-fp-AF2"/>
+                    </connections>
+                </controller>
             </objects>
-            <point key="canvasLocation" x="488" y="462"/>
+            <point key="canvasLocation" x="475" y="201"/>
         </scene>
     </scenes>
 </document>
