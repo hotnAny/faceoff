@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F0EB52E24357ACD00C67448 /* rf_clf.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1F0EB52D24357ACD00C67448 /* rf_clf.mlmodel */; };
 		1F56DFD224293C2700E73ED5 /* FaceOff WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 1F56DFD124293C2700E73ED5 /* FaceOff WatchKit App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1F56DFD824293C2700E73ED5 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F56DFD624293C2700E73ED5 /* Interface.storyboard */; };
 		1F56DFDA24293C2900E73ED5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F56DFD924293C2900E73ED5 /* Assets.xcassets */; };
@@ -67,6 +68,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1F0EB52D24357ACD00C67448 /* rf_clf.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = rf_clf.mlmodel; sourceTree = "<group>"; };
 		1F56DFCD24293C2700E73ED5 /* FaceOff.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FaceOff.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F56DFD124293C2700E73ED5 /* FaceOff WatchKit App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FaceOff WatchKit App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F56DFD724293C2700E73ED5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 		1F56DFE424293C2900E73ED5 /* FaceOff WatchKit Extension */ = {
 			isa = PBXGroup;
 			children = (
+				1F0EB52D24357ACD00C67448 /* rf_clf.mlmodel */,
 				1F8F5E54242C20590048654A /* FaceOff WatchKit Extension.entitlements */,
 				1F8F5E4D242C08B80048654A /* FaceOff.swift */,
 				1F56DFE924293C2900E73ED5 /* ExtensionDelegate.swift */,
@@ -302,6 +305,7 @@
 				1F56E0042429730500E73ED5 /* FaceOffTraining.swift in Sources */,
 				1F56DFEA24293C2900E73ED5 /* ExtensionDelegate.swift in Sources */,
 				1F8F5E4E242C08B80048654A /* FaceOff.swift in Sources */,
+				1F0EB52E24357ACD00C67448 /* rf_clf.mlmodel in Sources */,
 				1F8F5E53242C0C780048654A /* FaceOffConfig.swift in Sources */,
 				1F56DFEE24293C2900E73ED5 /* NotificationView.swift in Sources */,
 			);
@@ -367,7 +371,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -585,7 +589,7 @@
 				1F56DFF724293C2A00E73ED5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		1F56DFF824293C2A00E73ED5 /* Build configuration list for PBXNativeTarget "FaceOff WatchKit Extension" */ = {
 			isa = XCConfigurationList;
@@ -594,7 +598,7 @@
 				1F56DFFA24293C2A00E73ED5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		1F56DFFC24293C2A00E73ED5 /* Build configuration list for PBXNativeTarget "FaceOff WatchKit App" */ = {
 			isa = XCConfigurationList;
@@ -603,7 +607,7 @@
 				1F56DFFE24293C2A00E73ED5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		1F56E00024293C2A00E73ED5 /* Build configuration list for PBXNativeTarget "FaceOff" */ = {
 			isa = XCConfigurationList;
@@ -612,7 +616,7 @@
 				1F56E00224293C2A00E73ED5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};

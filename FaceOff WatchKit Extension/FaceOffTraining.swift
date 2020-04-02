@@ -39,15 +39,22 @@ class FaceOffTraining: WKInterfaceController{
     @IBOutlet weak var btnStart: WKInterfaceButton!
     @IBOutlet weak var lbFPS: WKInterfaceLabel!
     @IBOutlet weak var swTouching: WKInterfaceSwitch!
+    @IBOutlet weak var swWild: WKInterfaceSwitch!
     
     // behavior
     var isTouching = true
-    var partsTouched = ["Hair", "Nose", "Chin", "Left eye", "Right eye", "Ear", "Forehead", "Cheek"]
+    var isWild = false
+    var sides = ["Left", "Right"]
+    var partsTouched = ["Hair", "Nose", "Chin", "Eye", "Ear", "Forehead", "Cheek", "Temple", "Mouth"]
+    var how = ["Transiently", "Lingeringly"]
+    var nearMisses = ["Adjust eyeglasses", "Raise hand(s)", "Eat", "Drink", "Listen to cellphone"]
     
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         
         motionManager.accelerometerUpdateInterval = 1 / SAMPLINGRATE //0.01s
+        swWild.setHidden(isTouching)
+        self.refreshStartBtn(FaceOff.getCurrentMillis())
     }
     
     override func willActivate() {
@@ -78,7 +85,7 @@ class FaceOffTraining: WKInterfaceController{
                 let timeElapsed = FaceOff.getCurrentMillis() - self.timeStarted
                 
                 if timeElapsed > self.TIMEWINDOW {
-                    self.refreshStartBtn(timeGap)
+                    self.refreshStartBtn(FaceOff.getCurrentMillis())
                     print(self.stringize(self.bufAccel) + (self.isTouching ? "Touching" : "NoTouching"))
                     self.bufAccel = []
                     self.nexamples += 1
@@ -91,8 +98,13 @@ class FaceOffTraining: WKInterfaceController{
                 self.bufAccel.append((Float)(data!.acceleration.y))
                 self.bufAccel.append((Float)(data!.acceleration.z))
             } else if !self.isTouching {
-                if timeGap % 197 == 0 {
-                    self.startCollecting()
+                if self.isWild && timeGap >= 1000 && FaceOff.getCurrentMillis()%3 == 0 {
+                    if self.nexamples == FaceOffConfig.NWILDEXAMPLESPER {
+//                        self.isWild = false
+//                        self.swWild.setOn(false)
+                    } else {
+                        self.startCollecting()
+                    }
                 }
             }
         }
@@ -108,19 +120,35 @@ class FaceOffTraining: WKInterfaceController{
     
     // start button tap handler
     @IBAction func tapRecognized(_ sender: AnyObject) {
+        if(!isTouching && isWild) {
+            nexamples = 0
+            btnStart.setTitle("Collecting ...")
+            return
+        }
+        
         if !isStarted {
             startCollecting()
         }
     }
     
     // toggle between different class values
-    @IBAction func switchToggled(_ value: Bool) {
+    @IBAction func touchSwitchToggled(_ value: Bool) {
         self.isTouching = value
+        swWild.setHidden(value)
+        self.refreshStartBtn(FaceOff.getCurrentMillis())
+        self.nexamples = 0
+    }
+    
+    // toggle between different class values
+    @IBAction func wildSwitchToggled(_ value: Bool) {
+        self.isWild = value
+        self.swTouching.setOn(false)
+        self.nexamples = 0
     }
     
     // routine to start data collection
     func startCollecting()->Void{
-        btnStart.setTitle("Collecting")
+        btnStart.setTitle("Collecting ...")
         print("collecting ...")
         timeStarted = FaceOff.getCurrentMillis()
         isStarted = true
@@ -139,9 +167,18 @@ class FaceOffTraining: WKInterfaceController{
     func refreshStartBtn(_ n: Int64)->Void{
         if self.isTouching {
             let idx = (Int)(n % (Int64)(self.partsTouched.count))
-            self.btnStart.setTitle(self.partsTouched[idx])
+            let how = self.how[(Int)(FaceOff.getCurrentMillis()%97%2)]
+            let side = self.sides[(Int)(FaceOff.getCurrentMillis()%79%2)]
+            let info = how + " " + side + " " + self.partsTouched[idx]
+            self.btnStart.setTitle(info)
+            print(info)
         } else{
-            self.btnStart.setTitle("No touch")
+            if !self.isWild {
+                let idx = (Int)(n % (Int64)(self.nearMisses.count))
+                self.btnStart.setTitle(self.nearMisses[idx])
+            } else {
+                self.btnStart.setTitle("Reset count")
+            }
         }
     }
 }

@@ -9,12 +9,14 @@
 import WatchKit
 import Foundation
 import CoreMotion
+import HealthKit
 
 class FaceOffTesting: WKInterfaceController {
     
     // overall
     var readyForInferencing :Bool = false
     var timer :Timer? = nil
+    @IBOutlet weak var timerStub: WKInterfaceTimer!
     
     // sensor data
     let SAMPLINGRATE :Double = FaceOffConfig.SAMPLINGRATE
@@ -33,7 +35,10 @@ class FaceOffTesting: WKInterfaceController {
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         
+        print("debugger is working!")
+        
         motionManager.accelerometerUpdateInterval = 1 / SAMPLINGRATE //0.01s
+//        motionManager.gyroUpdateInterval = 1
     }
     
     override func willActivate() {
@@ -41,6 +46,13 @@ class FaceOffTesting: WKInterfaceController {
         
         if !motionManager.isAccelerometerAvailable {
             print("accelerometer unavailable!")
+        }
+        
+//        if !motionManager.isGyroAvailable {
+//            print("gyro unavailable")
+//        }
+        
+        if !motionManager.isAccelerometerAvailable && !motionManager.isGyroAvailable {
             return
         }
         
@@ -72,7 +84,7 @@ class FaceOffTesting: WKInterfaceController {
             if data.count == NFEATURES {
                 if classifyByRule(data) {
                     print("Don't touch your face!")
-                    for _ in 1...10 {
+                    for _ in 1...12 {
                         WKInterfaceDevice.current().play(.notification)
                         self.lbWarning.setAlpha(1.0)
                         self.alphaWarning = 1.0
@@ -82,7 +94,7 @@ class FaceOffTesting: WKInterfaceController {
                 } else {
                     self.alphaWarning *= 0.95
                     self.lbWarning.setAlpha(self.alphaWarning)
-                    print(".")
+	                    print(FaceOff.getCurrentMillis()%1000)
                 }
             }
         }
@@ -114,6 +126,8 @@ class FaceOffTesting: WKInterfaceController {
         
         // start accelerometer
         motionManager.startAccelerometerUpdates(to: OperationQueue.current!, withHandler: handler)
+        
+        self.timerStub.start()
     }
     
     override func didDeactivate() {
@@ -122,6 +136,7 @@ class FaceOffTesting: WKInterfaceController {
             motionManager.stopAccelerometerUpdates()
             timer?.invalidate()
         }
+        print("deactivated")
     }
     
 }

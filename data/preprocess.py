@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from sys import argv
 import subprocess
+import math
 
 if __name__ == "__main__":
     # print(argv)
@@ -24,14 +25,14 @@ if __name__ == "__main__":
 
         ##############################################################################
         # binning
-        nbins = 10
+        nbins = 16
         binsize = int(n / nbins + 0.9)
-        print(n, n / nbins + 0.9, binsize)
+        # print(n, n / nbins + 0.9, binsize)
         if binsize <= 1:
             print(binsize, "too few data points for binning!")
             continue
 
-        databins = []
+        bins = []
         onebin = [0, 0, 0]
         m = 0
         for i in range(0, n):
@@ -40,38 +41,69 @@ if __name__ == "__main__":
             onebin[2] += dataline[3 * i+2]
             m += 1
 
-            if (i+1) % binsize == 0 or i+1 >= n:
+            if (i+1) % binsize == 0 or (i+1 >= n and len(bins)/3 < nbins):
                 if m > 0:
                     onebin[0] /= m
                     onebin[1] /= m
                     onebin[2] /= m
-                    databins.extend(onebin)
+                    bins.extend(onebin)
                 onebin = [0, 0, 0]
                 m = 0
         
-        l = int(len(databins)/3)
+        l = int(len(bins)/3)
         if l < nbins:
-            databins.extend(databins[l-3: l])
+            bins.extend(bins[l-3: l])
         
-        if len(databins)/3 < nbins:
-            print(len(databins)/3, 'smaller than required # of bins')
+        if len(bins)/3 < nbins:
+            print(len(bins)/3, 'smaller than required # of bins')
             continue
 
-        datains.extend(databins)
-        # print(n, len(databins)/3)
-        # print(databins)
-        # print(len(databins)/3)
-        # break
+        datains.extend(bins)
+
+        # ##############################################################################
+        # sum, mean, sd
+        sums = [0, 0, 0]
+        for i in range(0, n):
+            sums[0] += dataline[3 * i]
+            sums[1] += dataline[3 * i + 1]
+            sums[2] += dataline[3 * i + 2]
+        datains.extend(sums)
+
+        means = [s/n for s in sums]
+        datains.extend(means)
+
+        sds = [0, 0, 0]
+        for i in range(0, n):
+            sds[0] += pow(dataline[3 * i] - means[0], 2)
+            sds[1] += pow(dataline[3 * i + 1] - means[1], 2)
+            sds[2] += pow(dataline[3 * i + 2] - means[2], 2)
+        sds = [math.sqrt(sd/n) for sd in sds]
+        datains.extend(sds)
+
+        # coefficient of variation
+        cvs = [sds[i]/means[i] for i in range(0, 3)]
+        datains.extend(cvs)
+        
+        ##############################################################################
+        #  median
+        xs = [dataline[3 * i] for i in range(0, n)]
+        ys = [dataline[3 * i + 1] for i in range(0, n)]
+        zs = [dataline[3 * i + 2] for i in range(0, n)]
+
+        xs.sort()
+        ys.sort()
+        zs.sort()
+        # print(xs, ys, zs)
+
+        medians = [xs[(int)(n/2)], ys[(int)(n/2)], zs[(int)(n/2)]]
+        # print(medians)
 
         ##############################################################################
-        #
+
         print(datains)
         for x in datains:
             strallins += "{:.3f}".format(x) + ','
         strallins += labelstr.strip() + '\n'
-
-        # print(strallins)
-        # subprocess.call('rm ' + 'p_' + argv[1], shell=True)
 
     strheader = ""
     for i in range(0, len(datains)):

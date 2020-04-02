@@ -13,4 +13,5 @@ final class FaceOffConfig {
     static let INFERENCERATE :Double = 10
     static let TIMEWINDOW = 1500
     static let ALWAYSON = false
+    static let NWILDEXAMPLESPER = 10
 }

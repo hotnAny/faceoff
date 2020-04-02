@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="15705" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="S8r-Qp-yg8">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="16096" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="S8r-Qp-yg8">
     <device id="watch38"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="15501"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="16012"/>
     </dependencies>
     <scenes>
         <!--Face Off Training-->
@@ -13,15 +13,19 @@
                     <items>
                         <switch width="1" alignment="left" value="YES" title="Touching" id="6cr-mo-uqW">
                             <connections>
-                                <action selector="switchToggled:" destination="GVU-yr-cuI" id="0kT-rE-Hcn"/>
+                                <action selector="touchSwitchToggled:" destination="GVU-yr-cuI" id="lJk-8H-tvg"/>
                             </connections>
                         </switch>
-                        <switch width="1" alignment="left" value="YES" title="In the wild" id="VS9-bv-9tx"/>
+                        <switch width="1" alignment="left" title="In the wild" id="VS9-bv-9tx">
+                            <connections>
+                                <action selector="wildSwitchToggled:" destination="GVU-yr-cuI" id="mN6-xu-H1X"/>
+                            </connections>
+                        </switch>
                         <button width="1" height="67" alignment="center" verticalAlignment="center" title="Start" id="M83-Br-bvP">
                             <gestureRecognizers>
                                 <tapGestureRecognizer id="dSw-cm-eKX"/>
                             </gestureRecognizers>
-                            <fontDescription key="font" type="system" pointSize="24"/>
+                            <fontDescription key="font" style="UICTFontTextStyleBody"/>
                             <connections>
                                 <action selector="tapRecognized:" destination="GVU-yr-cuI" id="lXo-xf-Ixl"/>
                             </connections>
@@ -29,7 +33,8 @@
                     </items>
                     <connections>
                         <outlet property="btnStart" destination="M83-Br-bvP" id="gaR-W6-7r1"/>
-                        <outlet property="swTouching" destination="6cr-mo-uqW" id="bGR-rI-chK"/>
+                        <outlet property="swTouching" destination="6cr-mo-uqW" id="gPQ-1h-6eH"/>
+                        <outlet property="swWild" destination="VS9-bv-9tx" id="Nqw-G4-wk3"/>
                     </connections>
                 </controller>
             </objects>
@@ -62,12 +67,16 @@
             <objects>
                 <controller id="1DT-va-9mu" customClass="FaceOffTesting" customModule="FaceOff_WatchKit_Extension">
                     <items>
-                        <label width="134" height="81" alignment="center" verticalAlignment="center" alpha="0.0" text="Don't Touch Your Face!" textAlignment="center" numberOfLines="2" id="6Ru-6b-Boq">
+                        <label width="134" height="81" alignment="center" verticalAlignment="center" text="Don't Touch Your Face!" textAlignment="center" numberOfLines="2" id="6Ru-6b-Boq">
                             <fontDescription key="font" type="system" pointSize="24"/>
                         </label>
+                        <timer alignment="center" id="mPS-eP-3uL">
+                            <fontDescription key="font" type="system" pointSize="24"/>
+                        </timer>
                     </items>
                     <connections>
                         <outlet property="lbWarning" destination="6Ru-6b-Boq" id="PAa-fp-AF2"/>
+                        <outlet property="timerStub" destination="mPS-eP-3uL" id="Fb0-fz-OhM"/>
                     </connections>
                 </controller>
             </objects>

@@ -25,11 +25,14 @@ Hair, Nose, Chin, Left eye, Right eye, Left ear, Right ear, Forehead, Left cheek
 - cleaning with a broom
 
 ## near-miss (10 per condition)
+- eating
 - drinking water
-- gesturing for speech
+<!-- - gesturing for speech -->
 - pick up phone
-- organizing bookshelf
+<!-- - organizing bookshelf -->
+- sneeze into your arm
 
 # Other Considerations
 - multiple times take off and put back on
 - test on a different person
+- separate different conditions into different files
