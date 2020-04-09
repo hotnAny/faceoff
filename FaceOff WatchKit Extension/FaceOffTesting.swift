@@ -10,6 +10,7 @@ import WatchKit
 import Foundation
 import CoreMotion
 import HealthKit
+import CoreML
 
 class FaceOffTesting: WKInterfaceController {
     
@@ -29,6 +30,9 @@ class FaceOffTesting: WKInterfaceController {
     // timing
     let TIMEWINDOW = FaceOffConfig.TIMEWINDOW
     
+    // ml
+    let nnModel = nnclf()
+    
     @IBOutlet weak var lbWarning: WKInterfaceLabel!
     var alphaWarning :CGFloat = 0
     
@@ -38,7 +42,7 @@ class FaceOffTesting: WKInterfaceController {
         print("debugger is working!")
         
         motionManager.accelerometerUpdateInterval = 1 / SAMPLINGRATE //0.01s
-//        motionManager.gyroUpdateInterval = 1
+        //        motionManager.gyroUpdateInterval = 1
     }
     
     override func willActivate() {
@@ -48,9 +52,9 @@ class FaceOffTesting: WKInterfaceController {
             print("accelerometer unavailable!")
         }
         
-//        if !motionManager.isGyroAvailable {
-//            print("gyro unavailable")
-//        }
+        //        if !motionManager.isGyroAvailable {
+        //            print("gyro unavailable")
+        //        }
         
         if !motionManager.isAccelerometerAvailable && !motionManager.isGyroAvailable {
             return
@@ -82,7 +86,48 @@ class FaceOffTesting: WKInterfaceController {
             // making inference
             let data = preproc(bufAccel)
             if data.count == NFEATURES {
-                if classifyByRule(data) {
+                
+                //
+                // code from hongyan
+                //
+                // data processing and model inference
+                // convert data to MulArray dtype
+                guard let mlMultiArray = try? MLMultiArray(shape:[30], dataType:MLMultiArrayDataType.double) else {
+                    fatalError("Unexpected runtime error. MLMultiArray")
+                }
+                for (index, element) in data.enumerated() {
+                    mlMultiArray[index] = NSNumber(floatLiteral: Double(element))
+                }
+                // predict the data
+                guard let modelPrediction = try? self.nnModel.prediction(acc_data: mlMultiArray) else {
+                    fatalError("Unexpected runtime error.")
+                }
+                // convert to decision
+                let classPrediction = modelPrediction.class_
+                
+                // for debug
+                print(classPrediction)
+                
+                // convert class to array
+                let decision_array = classPrediction
+                let length = classPrediction.count
+                let doublePtr =  decision_array.dataPointer.bindMemory(to: Double.self, capacity: length)
+                let doubleBuffer = UnsafeBufferPointer(start: doublePtr, count: length)
+                let output = Array(doubleBuffer)
+                
+                //print(output)
+                
+                // find which class has the highest prob
+                let max_ind = output.firstIndex(of: output.max()!)
+                
+                // need to verify which index in no touching and which is touching
+                
+                //
+                //
+                //
+                
+                //                if classifyByRule(data) {
+                if max_ind == 1 {
                     print("Don't touch your face!")
                     for _ in 1...12 {
                         WKInterfaceDevice.current().play(.notification)
@@ -94,7 +139,7 @@ class FaceOffTesting: WKInterfaceController {
                 } else {
                     self.alphaWarning *= 0.95
                     self.lbWarning.setAlpha(self.alphaWarning)
-	                    print(FaceOff.getCurrentMillis()%1000)
+                    //	                    print(FaceOff.getCurrentMillis()%1000)
                 }
             }
         }

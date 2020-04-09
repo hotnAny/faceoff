@@ -30,4 +30,4 @@
 ## facts from cdc
 - Avoid touching your eyes, nose, and mouth with unwashed hands (https://www.cdc.gov/coronavirus/2019-ncov/hcp/guidance-prevent-spread.html)
 - Each of the 26 future doctors under observation touched their faces an average 23 times per hour. (https://www.cnn.com/2020/03/08/health/coronavirus-touching-your-face-trnd/index.html)
-- 
+- related paper: https://www.ncbi.nlm.nih.gov/pubmed/25637115

@@ -44,10 +44,10 @@ class FaceOffTraining: WKInterfaceController{
     // behavior
     var isTouching = true
     var isWild = false
-    var sides = ["Left", "Right"]
-    var partsTouched = ["Hair", "Nose", "Chin", "Eye", "Ear", "Forehead", "Cheek", "Temple", "Mouth"]
-    var how = ["Transiently", "Lingeringly"]
-    var nearMisses = ["Adjust eyeglasses", "Raise hand(s)", "Eat", "Drink", "Listen to cellphone"]
+//    var sides = ["Left", "Right"]
+//    var partsTouched = ["Hair", "Nose", "Chin", "Eye", "Ear", "Forehead", "Cheek", "Temple", "Mouth"]
+//    var how = ["Transiently", "Lingeringly"]
+//    var nearMisses = ["Adjust eyeglasses", "Raise hand(s)", "Eat", "Drink", "Listen to cellphone"]
     
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
@@ -68,7 +68,7 @@ class FaceOffTraining: WKInterfaceController{
         // accelerometer event handler
         let handler:CMAccelerometerHandler = {(data: CMAccelerometerData?, error: Error?) -> Void in
             
-            // print(data!.acceleration.x, data!.acceleration.y, data!.acceleration.x)
+             print(data!.acceleration.x, data!.acceleration.y, data!.acceleration.x)
             
             // update fps
             let timeThisReading = FaceOff.getCurrentMillis()
@@ -166,16 +166,16 @@ class FaceOffTraining: WKInterfaceController{
     // update the start button to provide instructions
     func refreshStartBtn(_ n: Int64)->Void{
         if self.isTouching {
-            let idx = (Int)(n % (Int64)(self.partsTouched.count))
-            let how = self.how[(Int)(FaceOff.getCurrentMillis()%97%2)]
-            let side = self.sides[(Int)(FaceOff.getCurrentMillis()%79%2)]
-            let info = how + " " + side + " " + self.partsTouched[idx]
+            let idx = (Int)(n % (Int64)(FaceOffConfig.PARTSTOUCHED.count))
+            let how = FaceOffConfig.HOW[(Int)(FaceOff.getCurrentMillis()%97%2)]
+            let side = FaceOffConfig.SIDES[(Int)(FaceOff.getCurrentMillis()%79%2)]
+            let info = how + " " + side + " " + FaceOffConfig.PARTSTOUCHED[idx]
             self.btnStart.setTitle(info)
             print(info)
         } else{
             if !self.isWild {
-                let idx = (Int)(n % (Int64)(self.nearMisses.count))
-                self.btnStart.setTitle(self.nearMisses[idx])
+                let idx = (Int)(n % (Int64)(FaceOffConfig.NEARMISSES.count))
+                self.btnStart.setTitle(FaceOffConfig.NEARMISSES[idx])
             } else {
                 self.btnStart.setTitle("Reset count")
             }

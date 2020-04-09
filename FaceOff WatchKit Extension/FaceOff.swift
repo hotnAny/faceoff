@@ -13,11 +13,6 @@ import CoreMotion
 class FaceOff: WKInterfaceController{
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
-//        WKInterfaceDevice.current().play(.notification)
-//        WKInterfaceDevice.current().play(.notification)
-//        WKInterfaceDevice.current().play(.notification)
-//        WKInterfaceDevice.current().play(.notification)
-//        WKInterfaceDevice.current().play(.notification)
     }
     
     override func willActivate() {
