@@ -67,20 +67,28 @@
             <objects>
                 <controller id="1DT-va-9mu" customClass="FaceOffTesting" customModule="FaceOff_WatchKit_Extension">
                     <items>
-                        <label width="134" height="81" alignment="center" verticalAlignment="center" text="Don't Touch Your Face!" textAlignment="center" numberOfLines="2" id="6Ru-6b-Boq">
-                            <fontDescription key="font" type="system" pointSize="24"/>
+                        <switch width="1" alignment="left" title="Testing" id="zdI-8v-gD4">
+                            <connections>
+                                <action selector="testingToggled:" destination="1DT-va-9mu" id="gH2-4x-Zl5"/>
+                            </connections>
+                        </switch>
+                        <label width="132" height="47" alignment="left" hidden="YES" text="Label" textAlignment="center" id="ivS-ig-xeU">
+                            <fontDescription key="font" type="system" pointSize="20"/>
                         </label>
-                        <timer alignment="center" id="mPS-eP-3uL">
-                            <fontDescription key="font" type="system" pointSize="24"/>
-                        </timer>
+                        <button width="1" height="59" alignment="left" hidden="YES" title="Got it!" id="Lb3-7E-0u0">
+                            <connections>
+                                <action selector="confirmIntrr" destination="1DT-va-9mu" id="uLo-rP-PVd"/>
+                            </connections>
+                        </button>
                     </items>
                     <connections>
-                        <outlet property="lbWarning" destination="6Ru-6b-Boq" id="PAa-fp-AF2"/>
-                        <outlet property="timerStub" destination="mPS-eP-3uL" id="Fb0-fz-OhM"/>
+                        <outlet property="btnCfmInstr" destination="Lb3-7E-0u0" id="0lj-jg-T76"/>
+                        <outlet property="lbInstr" destination="ivS-ig-xeU" id="4OX-NB-4da"/>
+                        <outlet property="swTesting" destination="zdI-8v-gD4" id="iS0-jJ-QZx"/>
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="475" y="201"/>
+            <point key="canvasLocation" x="475" y="201.5"/>
         </scene>
     </scenes>
 </document>

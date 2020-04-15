@@ -17,11 +17,10 @@ class FaceOffTesting: WKInterfaceController {
     // overall
     var readyForInferencing :Bool = false
     var timer :Timer? = nil
-    @IBOutlet weak var timerStub: WKInterfaceTimer!
     
     // sensor data
     let SAMPLINGRATE :Double = FaceOffConfig.SAMPLINGRATE
-    let INFERENCERATE :Double = FaceOffConfig.INFERENCERATE
+    let INFERENCERATE :Double = 4
     let motionManager = CMMotionManager()
     var bufAccel :[Float] = []
     var tsAccel :[Int64] = []
@@ -31,8 +30,25 @@ class FaceOffTesting: WKInterfaceController {
     let TIMEWINDOW = FaceOffConfig.TIMEWINDOW
     
     // ml
-    let nnModel = nnclf()
+//    let nnModel = nnclf()
     
+    // user testing
+    let ISDRYRUN = false
+    var isTesting = false
+    var timeLastAction :Int64 = -1
+    var timeLastNonActionMark :Int64 = -1
+    let windowDataCollection = 2 * FaceOffConfig.TIMEWINDOW
+    var countActions = 0
+    @IBOutlet weak var swTesting: WKInterfaceSwitch!
+    @IBOutlet weak var lbInstr: WKInterfaceLabel!
+    @IBOutlet weak var btnCfmInstr: WKInterfaceButton!
+    var cntdownAction = -1
+    var clsAction = ""
+    var touchOngoing = false
+    let prepTimeForTouch = 4000
+    var intervalNextTouch = 60  // seconds
+    
+    // other ui
     @IBOutlet weak var lbWarning: WKInterfaceLabel!
     var alphaWarning :CGFloat = 0
     
@@ -42,7 +58,6 @@ class FaceOffTesting: WKInterfaceController {
         print("debugger is working!")
         
         motionManager.accelerometerUpdateInterval = 1 / SAMPLINGRATE //0.01s
-        //        motionManager.gyroUpdateInterval = 1
     }
     
     override func willActivate() {
@@ -52,95 +67,91 @@ class FaceOffTesting: WKInterfaceController {
             print("accelerometer unavailable!")
         }
         
-        //        if !motionManager.isGyroAvailable {
-        //            print("gyro unavailable")
-        //        }
-        
-        if !motionManager.isAccelerometerAvailable && !motionManager.isGyroAvailable {
+        if !ISDRYRUN && !motionManager.isAccelerometerAvailable && !motionManager.isGyroAvailable {
             return
         }
         
+        intervalNextTouch -= Int((windowDataCollection + prepTimeForTouch) / 1000)
+        
+        print(intervalNextTouch)
+        
         timer = Timer.scheduledTimer(withTimeInterval: 1 / INFERENCERATE, repeats: true) { timer in
+            
             // initial data gathering for readiness
-            if !self.readyForInferencing {
+            if !self.ISDRYRUN && !self.readyForInferencing {
                 return
             }
             
+            if !self.isTesting {
+                return
+            }
+            
+            //
             // look backwards to gather sensor data in the last TIMEWINDOW
             // ISSUE: sometimes sensor rate is low due to energy saving and there aren't enough data points
+            //
             var bufAccel :[Float] = []
-            var idx = self.ptrAccel
-            let tsCurrent = self.tsAccel[idx/3]
-            while(bufAccel.count < self.bufAccel.count) {
-                bufAccel.append(self.bufAccel[idx])
-                bufAccel.append(self.bufAccel[idx+1])
-                bufAccel.append(self.bufAccel[idx+2])
-                
-                idx = (idx + self.bufAccel.count - 3) % self.bufAccel.count
-                let ts = self.tsAccel[idx/3]
-                if tsCurrent - ts > self.TIMEWINDOW {
-                    break
+            if !self.ISDRYRUN {
+                var idx = self.ptrAccel
+                let tsCurrent = self.tsAccel[idx/3]
+                while(bufAccel.count < self.bufAccel.count) {
+                    bufAccel.append(self.bufAccel[idx])
+                    bufAccel.append(self.bufAccel[idx+1])
+                    bufAccel.append(self.bufAccel[idx+2])
+                    
+                    idx = (idx + self.bufAccel.count - 3) % self.bufAccel.count
+                    let ts = self.tsAccel[idx/3]
+                    if tsCurrent - ts > self.TIMEWINDOW {
+                        break
+                    }
                 }
             }
             
-            // making inference
-            let data = preproc(bufAccel)
-            if data.count == NFEATURES {
+            
+            //
+            // collect data labeled as face touching
+            //
+            let timeSinceLastAction = FaceOff.getCurrentMillis()-self.timeLastAction
+            if timeSinceLastAction < self.windowDataCollection {
+                print(FaceOff.stringize(bufAccel) + "Touching")
+                self.touchOngoing = true
                 
-                //
-                // code from hongyan
-                //
-                // data processing and model inference
-                // convert data to MulArray dtype
-                guard let mlMultiArray = try? MLMultiArray(shape:[30], dataType:MLMultiArrayDataType.double) else {
-                    fatalError("Unexpected runtime error. MLMultiArray")
-                }
-                for (index, element) in data.enumerated() {
-                    mlMultiArray[index] = NSNumber(floatLiteral: Double(element))
-                }
-                // predict the data
-                guard let modelPrediction = try? self.nnModel.prediction(acc_data: mlMultiArray) else {
-                    fatalError("Unexpected runtime error.")
-                }
-                // convert to decision
-                let classPrediction = modelPrediction.class_
+            } else if self.cntdownAction == -1 {
                 
-                // for debug
-                print(classPrediction)
-                
-                // convert class to array
-                let decision_array = classPrediction
-                let length = classPrediction.count
-                let doublePtr =  decision_array.dataPointer.bindMemory(to: Double.self, capacity: length)
-                let doubleBuffer = UnsafeBufferPointer(start: doublePtr, count: length)
-                let output = Array(doubleBuffer)
-                
-                //print(output)
-                
-                // find which class has the highest prob
-                let max_ind = output.firstIndex(of: output.max()!)
-                
-                // need to verify which index in no touching and which is touching
-                
-                //
-                //
-                //
-                
-                //                if classifyByRule(data) {
-                if max_ind == 1 {
-                    print("Don't touch your face!")
-                    for _ in 1...12 {
-                        WKInterfaceDevice.current().play(.notification)
-                        self.lbWarning.setAlpha(1.0)
-                        self.alphaWarning = 1.0
+                // if a face touching just took place, update to the next face touching part
+                if self.touchOngoing {
+                    Timer.scheduledTimer(withTimeInterval: TimeInterval(self.intervalNextTouch), repeats: false) { timer in
+                        self.clsAction = self.getNextAction()
+                        self.lbInstr.setText(self.clsAction)
+                        self.btnCfmInstr.setTitle("Got it!")
+                        for _ in 1...6 {
+                            WKInterfaceDevice.current().play(.notification)
+                        }
                     }
-                    self.bufAccel = []
-                    self.readyForInferencing = false
-                } else {
-                    self.alphaWarning *= 0.95
-                    self.lbWarning.setAlpha(self.alphaWarning)
-                    //	                    print(FaceOff.getCurrentMillis()%1000)
+                    self.touchOngoing = false
                 }
+                
+                // collect data labeled as non face touching
+                print(FaceOff.stringize(bufAccel) + "No Touching")
+                self.timeLastNonActionMark = FaceOff.getCurrentMillis()
+                
+            }
+            
+            //
+            // count down for a face touching action
+            //
+            let n = self.prepTimeForTouch / (1000 / Int(self.INFERENCERATE))
+            if self.cntdownAction == n {
+                self.countActions += 1
+                print("Action #" + String(self.countActions) + " do something")
+                // 2nd vibration
+                for _ in 1...32 {
+                    WKInterfaceDevice.current().play(.notification)
+                }
+                self.timeLastAction = FaceOff.getCurrentMillis()
+                self.cntdownAction = -1
+            } else if self.cntdownAction >= 0 {
+                self.cntdownAction += 1
             }
         }
         
@@ -171,8 +182,6 @@ class FaceOffTesting: WKInterfaceController {
         
         // start accelerometer
         motionManager.startAccelerometerUpdates(to: OperationQueue.current!, withHandler: handler)
-        
-        self.timerStub.start()
     }
     
     override func didDeactivate() {
@@ -184,4 +193,27 @@ class FaceOffTesting: WKInterfaceController {
         print("deactivated")
     }
     
+    @IBAction func testingToggled(_ value: Bool) {
+        self.isTesting = value
+        self.lbInstr.setHidden(!value)
+        self.btnCfmInstr.setHidden(!value)
+        if value {
+            lbInstr.setText(self.getNextAction())
+        }
+    }
+    
+    @IBAction func confirmIntrr() {
+        self.cntdownAction = 0
+        print("counting down ...")
+        self.btnCfmInstr.setTitle("Wait ...")
+    }
+    
+    func getNextAction()->String{
+        var clsAction = self.clsAction
+        while clsAction == self.clsAction {
+            clsAction = FaceOffConfig.UPARTSTOUCHED[Int.random(in: 0 ... FaceOffConfig.UPARTSTOUCHED.count-1)]
+        }
+        
+        return clsAction
+    }    
 }

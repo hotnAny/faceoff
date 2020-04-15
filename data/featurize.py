@@ -2,17 +2,17 @@
 from sys import argv
 import subprocess
 
-rawfiles = [
-    '0401s1general.csv', '0401s1nearmiss.csv', '0331s1touch.csv',
-    '0401s2general.csv', '0401s2nearmiss.csv', '0401s2touch.csv',
-    '0401s3general.csv', '0401s3nearmiss.csv', '0401s3touch.csv'
-    ]
-
 # rawfiles = [
-#     '0401s1general.csv', '0331s1touch.csv',
-#     '0401s2general.csv', '0401s2touch.csv',
-#     '0401s3general.csv', '0401s3touch.csv'
+#     '0401s1general.csv', '0401s1nearmiss.csv', '0331s1touch.csv',
+#     '0401s2general.csv', '0401s2nearmiss.csv', '0401s2touch.csv',
+#     '0401s3general.csv', '0401s3nearmiss.csv', '0401s3touch.csv'
 #     ]
+
+rawfiles = [
+    '0401s1general.csv', '0331s1touch.csv',
+    '0401s2general.csv', '0401s2touch.csv',
+    '0401s3general.csv', '0401s3touch.csv'
+    ]
 
 # rawfiles = [
 #     '0401s1nearmiss.csv', '0331s1touch.csv',

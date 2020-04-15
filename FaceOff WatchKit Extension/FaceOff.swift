@@ -24,7 +24,16 @@ class FaceOff: WKInterfaceController{
     }
     
     // get ms value of the current time
-    static  func getCurrentMillis()->Int64{
+    static func getCurrentMillis()->Int64{
         return Int64(NSDate().timeIntervalSince1970 * 1000)
+    }
+    
+    // turn a number array into a string
+    static func stringize(_ nums: [Float])->String{
+        var str = ""
+        for x in nums {
+            str += String(format: "%.3f", x) + ","
+        }
+        return str
     }
 }

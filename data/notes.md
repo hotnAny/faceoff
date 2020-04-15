@@ -1,0 +1,4 @@
+- hyper parameter tuning https://towardsdatascience.com/hyperparameter-tuning-the-random-forest-in-python-using-scikit-learn-28d2aa77dd74
+- use vs. not use near miss
+- different bin sizes
+- only kept certain axes

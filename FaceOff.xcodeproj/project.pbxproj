@@ -23,6 +23,7 @@
 		1F8F5E50242C0BB70048654A /* FaceOffTesting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8F5E4F242C0BB70048654A /* FaceOffTesting.swift */; };
 		1F8F5E53242C0C780048654A /* FaceOffConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8F5E52242C0C780048654A /* FaceOffConfig.swift */; };
 		1F8F5E57242C20590048654A /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F8F5E56242C20590048654A /* HealthKit.framework */; };
+		1FD548DF2447983700DFE083 /* FaceOffRecycled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD548DE2447983700DFE083 /* FaceOffRecycled.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,7 @@
 		1F8F5E52242C0C780048654A /* FaceOffConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceOffConfig.swift; sourceTree = "<group>"; };
 		1F8F5E54242C20590048654A /* FaceOff WatchKit Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "FaceOff WatchKit Extension.entitlements"; sourceTree = "<group>"; };
 		1F8F5E56242C20590048654A /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS6.1.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
+		1FD548DE2447983700DFE083 /* FaceOffRecycled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceOffRecycled.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +151,7 @@
 				1F56E0032429730500E73ED5 /* FaceOffTraining.swift */,
 				1F8F5E4B242AB6C90048654A /* FaceOffLearner.swift */,
 				1F8F5E4F242C0BB70048654A /* FaceOffTesting.swift */,
+				1FD548DE2447983700DFE083 /* FaceOffRecycled.swift */,
 				1F8F5E52242C0C780048654A /* FaceOffConfig.swift */,
 			);
 			path = "FaceOff WatchKit Extension";
@@ -300,6 +303,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F8F5E4C242AB6C90048654A /* FaceOffLearner.swift in Sources */,
+				1FD548DF2447983700DFE083 /* FaceOffRecycled.swift in Sources */,
 				1F56DFEC24293C2900E73ED5 /* NotificationController.swift in Sources */,
 				1F8F5E50242C0BB70048654A /* FaceOffTesting.swift in Sources */,
 				1F56E0042429730500E73ED5 /* FaceOffTraining.swift in Sources */,

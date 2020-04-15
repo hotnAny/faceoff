@@ -86,7 +86,7 @@ class FaceOffTraining: WKInterfaceController{
                 
                 if timeElapsed > self.TIMEWINDOW {
                     self.refreshStartBtn(FaceOff.getCurrentMillis())
-                    print(self.stringize(self.bufAccel) + (self.isTouching ? "Touching" : "NoTouching"))
+                    print(FaceOff.stringize(self.bufAccel) + (self.isTouching ? "Touching" : "NoTouching"))
                     self.bufAccel = []
                     self.nexamples += 1
                     print("# of examples: " + (String)(self.nexamples))
@@ -152,15 +152,6 @@ class FaceOffTraining: WKInterfaceController{
         print("collecting ...")
         timeStarted = FaceOff.getCurrentMillis()
         isStarted = true
-    }
-    
-    // turn a number array into a string
-    func stringize(_ nums: [Float])->String{
-        var str = ""
-        for x in nums {
-            str += String(format: "%.3f", x) + ","
-        }
-        return str
     }
     
     // update the start button to provide instructions

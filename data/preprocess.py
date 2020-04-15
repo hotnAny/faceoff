@@ -20,7 +20,10 @@ if __name__ == "__main__":
         idxLastSep = datastr.rindex(',')
         labelstr = datastr[idxLastSep+1:]
         datastr = datastr[0: idxLastSep]
-        dataline = list(map(float, datastr.split(',')))
+        try:
+            dataline = list(map(float, datastr.split(',')))
+        except ValueError:
+            continue
         n = int(len(dataline)/3)
 
         ##############################################################################
@@ -60,7 +63,7 @@ if __name__ == "__main__":
 
         datains.extend(bins)
 
-        # ##############################################################################
+        ##############################################################################
         # sqrt of sum per bin
         sumsqs = []
         l = int(len(bins)/3)
@@ -71,7 +74,7 @@ if __name__ == "__main__":
             sumsqs.append(math.sqrt(x*x + y*y + z*z))
         datains.extend(sumsqs)
 
-        # ##############################################################################
+        ##############################################################################
         # sum, mean, sd
         sums = [0, 0, 0]
         for i in range(0, n):
@@ -130,7 +133,7 @@ if __name__ == "__main__":
         # print(zeroxings)
         datains.extend(zeroxings)
         
-        ##############################################################################
+        #############################################################################
         # skewness, kurtosis
         mad2 = [0, 0, 0]
         mad3 = [0, 0, 0]
@@ -150,10 +153,10 @@ if __name__ == "__main__":
         # print(skewness, kurtosis)
         datains.extend(skewness)
         datains.extend(kurtosis)
-        ##############################################################################
+        #############################################################################
 
         # for only outputing a specific axis
-        # datains = datains[2::3]
+        datains = datains[0::3]
 
         print(datains)
 
