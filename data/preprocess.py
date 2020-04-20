@@ -3,6 +3,8 @@ from sys import argv
 import subprocess
 import math
 
+nexpected = 150
+
 if __name__ == "__main__":
     # print(argv)
     if len(argv) <= 1:
@@ -25,6 +27,13 @@ if __name__ == "__main__":
         except ValueError:
             continue
         n = int(len(dataline)/3)
+
+        if n < nexpected * 0.75:
+            continue
+        
+        ### only look at the onset
+        n = int(n*0.5)
+        dataline = dataline[0: n*3]
 
         ##############################################################################
         # binning
