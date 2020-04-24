@@ -38,7 +38,7 @@ PARAM_GRID = {
     'n_estimators': [100, 200, 300]
 }
 
-search_type = GRID_SEARCH
+search_type = None
 
 HAZTIME = True
 CV = 10 if HAZTIME else 3

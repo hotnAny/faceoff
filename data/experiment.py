@@ -6,18 +6,29 @@ import subprocess
 
 SKIP1 = True
 
-rawfiles = [
+rawfiles1 = [
+    '0401s1general.csv', '0401s1nearmiss.csv', '0331s1touch.csv',
+    '0401s2general.csv', '0401s2nearmiss.csv', '0401s2touch.csv',
+    '0401s3general.csv', '0401s3nearmiss.csv', '0401s3touch.csv'
+    ]
+
+rawfiles2 = [
     '0401s1general.csv', '0331s1touch.csv',
     '0401s2general.csv', '0401s2touch.csv',
     '0401s3general.csv', '0401s3touch.csv'
-    ]
+]
+
+# set_rawfiles = [rawfiles1, rawfiles2]
+set_rawfiles = [rawfiles2]
 
 touch_v_general = 'm_04221701_touch_v_general.csv'
 touch_v_nearmiss = 'm_04221701_touch_v_nearmiss.csv'
-testing = 'p_all2.csv'
+touch_v_nearmuss_v_general = 'm_04241449_touch_nearmiss_notouch.csv'
+testingfiles = 'p1_all.csv', 'p2_all.csv', 'p3_all.csv', 'p_all.csv'
 
-# cutpoints = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-cutpoints = [1.0]
+
+cutpoints = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+# cutpoints = [1.0]
 
 def unpack(fn):
     datafile = open(fn, 'r')
@@ -62,24 +73,30 @@ if __name__ == "__main__":
     #
     for onset in cutpoints:
         print('############### onset=' + str(onset))
-        print('############### preprocessing testing file ... ')
-        subprocess.call('python preprocess.py ' + testing + ' ' + str(onset), shell=True)
-        print('############### done! ')
+        for rawfiles in set_rawfiles:
+            print('############### ' + ','.join(rawfiles))    
 
-        print('############### preprocessing training file ... ')
-        for f in rawfiles:
-            subprocess.call('python preprocess.py ' + f + ' ' + str(onset), shell=True)
-        
-        strcmd = 'python merge.py ' + 'roc_' + str(onset)
-        for f in rawfiles:
-            strcmd += ' p_' + f
-        subprocess.call(strcmd, shell=True)
+            print('############### preprocessing training file ... ')
+            for f in rawfiles:
+                subprocess.call('python preprocess.py ' + f + ' ' + str(onset), shell=True)
+            
+            strcmd = 'python merge.py ' + 'roc_' + str(onset)
+            for f in rawfiles:
+                strcmd += ' p_' + f
+            subprocess.call(strcmd, shell=True)
 
-        print('############### done! ')
+            print('############### done! ')
 
-        print('############### testing ...')
-        subprocess.call('python test.py m_roc_' + str(onset) + '.csv ' + 'p_' + testing, shell=True)
-        print('############### done! ')
+            print('############### preprocessing testing files ...')
+            str_testingfiles = ''
+            for testing in testingfiles:
+                subprocess.call('python preprocess.py ' + testing + ' ' + str(onset), shell=True)
+                str_testingfiles += 'p_' + testing + ' '
+            print('############### done: ' + str_testingfiles)
+
+            print('############### testing ...')
+            subprocess.call('python test.py m_roc_' + str(onset) + '.csv ' + str_testingfiles, shell=True)
+            print('############### done! ')
         
 
     # # rf = RandomForestClassifier(

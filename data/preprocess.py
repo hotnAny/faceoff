@@ -168,17 +168,17 @@ if __name__ == "__main__":
         datains.extend(kurtosis)
 
         # for only outputing a specific axis
-        xdatains = datains[0::3]
-        nx = len(xdatains)
-        datains.extend(xdatains[int(nx*0.6):nx-1])
+        # xdatains = datains[0::3]
+        # nx = len(xdatains)
+        # datains.extend(xdatains[int(nx*0.6):nx-1])
 
-        ydatains = datains[1::3]
-        ny = len(ydatains)
-        datains.extend(ydatains[0:int(ny*0.2)])
+        # ydatains = datains[1::3]
+        # ny = len(ydatains)
+        # datains.extend(ydatains[0:int(ny*0.2)])
 
-        zdatains = datains[2::3]
-        nz = len(zdatains)
-        datains.extend(zdatains[0:int(nz*0.2)])
+        # zdatains = datains[2::3]
+        # nz = len(zdatains)
+        # datains.extend(zdatains[0:int(nz*0.2)])
 
         # datains.extend(sumsqs)
 
