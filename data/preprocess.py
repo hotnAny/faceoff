@@ -32,16 +32,18 @@ if __name__ == "__main__":
             continue
         
         ### only look at the onset
-        n = int(n*0.5)
-        dataline = dataline[0: n*3]
+        if len(argv) == 3:
+            n = int(n*float(argv[2]))
+            dataline = dataline[0: n*3]
+            # print(n)
 
         ##############################################################################
         # binning
-        nbins = 20
+        nbins = 16
         binsize = int(n / nbins + 0.9)
         if binsize < 1:
-            print(binsize, "too few data points for binning!")
             continue
+        # print(binsize, "too few data points for binning!")
 
         bins = []
         onebin = [0, 0, 0]
@@ -67,10 +69,8 @@ if __name__ == "__main__":
             bins.extend(bins[l-3: l])
 
         if len(bins)/3 < nbins:
-            print(len(bins)/3, 'smaller than required # of bins')
             continue
-
-        datains.extend(bins)
+        # print(len(bins)/3, 'smaller than required # of bins')
 
         ##############################################################################
         # sqrt of sum per bin
@@ -81,7 +81,7 @@ if __name__ == "__main__":
             y = bins[i+1]
             z = bins[i+2]
             sumsqs.append(math.sqrt(x*x + y*y + z*z))
-        datains.extend(sumsqs)
+        
 
         ##############################################################################
         # sum, mean, sd
@@ -90,10 +90,8 @@ if __name__ == "__main__":
             sums[0] += dataline[3 * i]
             sums[1] += dataline[3 * i + 1]
             sums[2] += dataline[3 * i + 2]
-        datains.extend(sums)
 
         means = [s/n for s in sums]
-        datains.extend(means)
 
         sds = [0, 0, 0]
         for i in range(0, n):
@@ -101,11 +99,9 @@ if __name__ == "__main__":
             sds[1] += pow(dataline[3 * i + 1] - means[1], 2)
             sds[2] += pow(dataline[3 * i + 2] - means[2], 2)
         sds = [math.sqrt(sd/n) for sd in sds]
-        datains.extend(sds)
 
         # coefficient of variation
         cvs = [sds[i]/means[i] for i in range(0, len(means))]
-        datains.extend(cvs)
 
         ##############################################################################
         #  median
@@ -118,7 +114,6 @@ if __name__ == "__main__":
         zs.sort()
 
         medians = [xs[(int)(n/2)], ys[(int)(n/2)], zs[(int)(n/2)]]
-        datains.extend(medians)
 
         ##############################################################################
         # meanabsdev, medianabsdev
@@ -129,8 +124,6 @@ if __name__ == "__main__":
                 meanad[j] += abs(dataline[3*i + j] - means[j]) / n
                 medianad[j] += abs(dataline[3*i + j] - medians[j]) / n
         # print(meanad, medianad)
-        datains.extend(meanad)
-        datains.extend(medianad)
 
         ##############################################################################
         # zero crossings
@@ -140,7 +133,6 @@ if __name__ == "__main__":
                     if dataline[3*i+j] * dataline[3*(i+1)+j] < 0:
                         zeroxings[j] += 1
         # print(zeroxings)
-        datains.extend(zeroxings)
         
         #############################################################################
         # skewness, kurtosis
@@ -160,14 +152,37 @@ if __name__ == "__main__":
             kurtosis[j] = mad4[j] / math.pow(sds[j], 4)
 
         # print(skewness, kurtosis)
-        datains.extend(skewness)
-        datains.extend(kurtosis)
+        
         #############################################################################
 
-        # for only outputing a specific axis
-        datains = datains[0::3]
+        # datains.extend(bins)
+        datains.extend(sums)
+        datains.extend(means)
+        datains.extend(sds)
+        datains.extend(cvs)
+        datains.extend(zeroxings)
+        datains.extend(medians)
+        datains.extend(meanad)
+        datains.extend(medianad)
+        datains.extend(skewness)
+        datains.extend(kurtosis)
 
-        print(datains)
+        # for only outputing a specific axis
+        xdatains = datains[0::3]
+        nx = len(xdatains)
+        datains.extend(xdatains[int(nx*0.6):nx-1])
+
+        ydatains = datains[1::3]
+        ny = len(ydatains)
+        datains.extend(ydatains[0:int(ny*0.2)])
+
+        zdatains = datains[2::3]
+        nz = len(zdatains)
+        datains.extend(zdatains[0:int(nz*0.2)])
+
+        # datains.extend(sumsqs)
+
+        # print(datains)
 
         for x in datains:
             strallins += "{:.3f}".format(x) + ','

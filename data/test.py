@@ -32,28 +32,46 @@ if __name__ == "__main__":
 
     print('# of features:', len(xtrain[0]))
 
+    print('training model ...')
+    
     # rf = RandomForestClassifier() 
-    rf = RandomForestClassifier(n_estimators=1400, min_samples_split=6, min_samples_leaf=1, max_features='auto', max_depth=125, bootstrap=False)
+
+    # old
+    # rf = RandomForestClassifier(n_estimators=1400, min_samples_split=6, min_samples_leaf=1, max_features='auto', max_depth=125, bootstrap=False)
+
+    # touch v near miss v no touch hyperparameterization
+    # rf = RandomForestClassifier(n_estimators=100, min_samples_split=10, min_samples_leaf=8, max_features='auto', max_depth=100, bootstrap=False)
+
+    # touch v near miss hyperparameterization
+    rf = RandomForestClassifier(n_estimators=100, min_samples_split=6, min_samples_leaf=1, max_features='auto', max_depth=550, bootstrap=False)
+
+    # touch v near miss hyperparameterization more extensive
+    # rf = RandomForestClassifier(n_estimators=100, min_samples_split=6, min_samples_leaf=6, max_features=None, max_depth=300, bootstrap=True)
+
     rf.fit(xtrain, ytrain)
     scores = cross_val_score(rf, xtrain, ytrain, cv=10)
-    print("Base model accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
+    print("base model accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 
     # 
     # segmenting testing data
     # 
+    print('spliting test data set ...')
     testfile = open(argv[2], 'r')
     testlines = testfile.readlines()
     testlines.pop(0)
     xtest = []
     ytest = []
 
-    nfeats = 10e3
-    for datastr in testlines:
-        nfeats = min(len(datastr.split(','))-1, nfeats)
+    nfeats = len(xtrain[0])
+
+    # for datastr in testlines:
+    #     nfeats = min(len(datastr.split(','))-1, nfeats)
     
-    print(nfeats)
+    # print(nfeats)
 
     for datastr in testlines:
+        if len(datastr.split(','))-1 < nfeats:
+            continue
         idxLastSep = datastr.rindex(',')
         labelstr = datastr[idxLastSep+1:len(datastr)-1]
         datastr = datastr[0: idxLastSep]
@@ -64,6 +82,7 @@ if __name__ == "__main__":
         try:
             dataline = list(map(float, lsdatastr))
         except ValueError:
+            print('value error!')
             continue
 
         xtest.append(dataline)
@@ -90,12 +109,13 @@ if __name__ == "__main__":
     # 
     # testing
     # 
+    print('testing model ...')
     thres_nconsec = 1
     tp_touch = 0
     fn_touch = 0
     for xtouch in xtest_touches:
         prediction = rf.predict(xtouch)
-        # results = np.where(prediction=='Touching')
+        
         nconsec = 0
         for y in prediction:
             if y == 'Touching':
@@ -106,11 +126,12 @@ if __name__ == "__main__":
             else:
                 nconsec = 0
         
+        # results = np.where(prediction=='Touching')
         # if len(results[0]) > 0:
         #     tp_touch += 1
         # else:
         #     fn_touch += 1
-    print('true positive rate', tp_touch / len(xtest_touches))
+    print('__________________________________________________________________________true positive rate', tp_touch / len(xtest_touches))
 
     # print(xtest_nontouches)
     
@@ -137,7 +158,7 @@ if __name__ == "__main__":
                 cntr_skip = nskip
             nconsec = 0
        
-    print('false positive rate',  fp_touch / len(xtest_nontouches), fp_touch, len(xtest_nontouches))
+    print('__________________________________________________________________________false positive rate',  fp_touch / len(xtest_nontouches), fp_touch, len(xtest_nontouches))
 
 
 

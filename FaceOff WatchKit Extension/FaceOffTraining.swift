@@ -68,7 +68,8 @@ class FaceOffTraining: WKInterfaceController{
         // accelerometer event handler
         let handler:CMAccelerometerHandler = {(data: CMAccelerometerData?, error: Error?) -> Void in
             
-             print(data!.acceleration.x, data!.acceleration.y, data!.acceleration.x)
+//             print(data!.acceleration.x, data!.acceleration.y, data!.acceleration.x)
+            print(data!.acceleration.z)
             
             // update fps
             let timeThisReading = FaceOff.getCurrentMillis()

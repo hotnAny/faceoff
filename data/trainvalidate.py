@@ -24,16 +24,21 @@ GRID_SEARCH = 1
 # {'n_estimators': 200, 'max_depth': 350}
  # {'n_estimators': 1800, 'min_samples_split': 5, 'min_samples_leaf': 1, 'max_features': 'auto', 'max_depth': 350, 'bootstrap': False}
 #  {'n_estimators': 1400, 'min_samples_split': 10, 'min_samples_leaf': 1, 'max_features': 'auto', 'max_depth': 100, 'bootstrap': False}
+# {'n_estimators': 1000, 'min_samples_split': 10, 'min_samples_leaf': 4, 'max_features': 'sqrt', 'max_depth': None, 'bootstrap': True}
+# {'n_estimators': 100, 'min_samples_split': 5, 'min_samples_leaf': 1, 'max_features': 'log2', 'max_depth': 450, 'bootstrap': False}
+# {'n_estimators': 100, 'min_samples_split': 15, 'min_samples_leaf': 4, 'max_features': 'log2', 'max_depth': 50, 'bootstrap': False}
+# {'n_estimators': 100, 'min_samples_split': 5, 'min_samples_leaf': 4, 'max_features': None, 'max_depth': 300, 'bootstrap': True}
+
 PARAM_GRID = {
-    'bootstrap': [False],
-    'max_depth': [50, 75, 100, 125, 150],
-    'max_features': ['auto'],
-    'min_samples_leaf': [1],
-    'min_samples_split': [6, 8, 10, 12, 14],
-    'n_estimators': [1200, 1300, 1400, 1500, 1600]
+    'bootstrap': [True, False],
+    'max_depth': [275, 300, 325],
+    'max_features': [None, 'log2'],
+    'min_samples_leaf': [2, 3, 4, 5, 6],
+    'min_samples_split': [3, 4, 5, 6, 7],
+    'n_estimators': [100, 200, 300]
 }
 
-search_type = None
+search_type = GRID_SEARCH
 
 HAZTIME = True
 CV = 10 if HAZTIME else 3
@@ -94,7 +99,7 @@ if __name__ == "__main__":
         grid_search.fit(xtrain, ytrain)
         print(grid_search.best_params_)
         print(grid_search.best_score_)
-    # base model
+    # non search
     else:
         rf.fit(xtrain, ytrain)
         scores = cross_val_score(rf, xtrain, ytrain, cv=20)
@@ -103,9 +108,16 @@ if __name__ == "__main__":
         # {'bootstrap': False, 'max_depth': 300, 'max_features': 'log2', 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 200}
         # {'n_estimators': 1400, 'min_samples_split': 10, 'min_samples_leaf': 1, 'max_features': 'auto', 'max_depth': 100, 'bootstrap': False}
         # {'bootstrap': False, 'max_depth': 125, 'max_features': 'auto', 'min_samples_leaf': 1, 'min_samples_split': 6, 'n_estimators': 1400}
-        rf_tuned = RandomForestClassifier(n_estimators=1400, min_samples_split=6, min_samples_leaf=1, max_features='auto', max_depth=125, bootstrap=False)
+        # {'bootstrap': True, 'max_depth': None, 'max_features': 'sqrt', 'min_samples_leaf': 3, 'min_samples_split': 6, 'n_estimators': 800}
+        # {'bootstrap': False, 'max_depth': 550, 'max_features': 'auto', 'min_samples_leaf': 1, 'min_samples_split': 6, 'n_estimators': 100}
+        # {'bootstrap': False, 'max_depth': 100, 'max_features': 'auto', 'min_samples_leaf': 8, 'min_samples_split': 10, 'n_estimators': 100}
+        {'bootstrap': True, 'max_depth': 325, 'max_features': None, 'min_samples_leaf': 5, 'min_samples_split': 7, 'n_estimators': 100}
+        # {'bootstrap': True, 'max_depth': 300, 'max_features': None, 'min_samples_leaf': 6, 'min_samples_split': 6, 'n_estimators': 100}
+
+        rf_tuned = RandomForestClassifier(n_estimators=100, min_samples_split=7, min_samples_leaf=5, max_features=None, max_depth=325, bootstrap=True)
+        
         rf_tuned.fit(xtrain, ytrain)
-        scores_tuned = cross_val_score(rf_tuned, xtrain, ytrain, cv=20)
+        scores_tuned = cross_val_score(rf_tuned, xtrain, ytrain, cv=10)
         print("Tuned model accuracy: %0.2f (+/- %0.2f)" % (scores_tuned.mean(), scores_tuned.std() * 2))
 
     ###################################################################################################
