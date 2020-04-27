@@ -6,6 +6,29 @@ from sklearn.calibration import CalibratedClassifierCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.datasets import make_classification
 from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_validate
+from sklearn.metrics import recall_score
+import subprocess
+
+rawfiles1 = [
+    '0401s1general.csv', '0401s1nearmiss.csv', '0331s1touch.csv',
+    '0401s2general.csv', '0401s2nearmiss.csv', '0401s2touch.csv',
+    '0401s3general.csv', '0401s3nearmiss.csv', '0401s3touch.csv'
+    ]
+
+rawfiles2 = [
+    '0401s1general.csv', '0331s1touch.csv',
+    '0401s2general.csv', '0401s2touch.csv',
+    '0401s3general.csv', '0401s3touch.csv'
+]
+
+rawfiles3 = [
+    '0401s1nearmiss.csv', '0331s1touch.csv',
+    '0401s2nearmiss.csv', '0401s2touch.csv',
+    '0401s3nearmiss.csv', '0401s3touch.csv'
+]
+
+rawfiles = rawfiles2
 
 RANDOM_SEARCH=0
 RANDOM_GRID = {
@@ -44,6 +67,8 @@ HAZTIME = True
 CV = 10 if HAZTIME else 3
 NITER = 300 if HAZTIME else 100
 
+onsets = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+
 if __name__ == "__main__":
     #  X, y = make_classification(n_samples=1000, n_features=4, n_informative=2, n_redundant=0, random_state=0, shuffle=False)
     #  print(X)
@@ -59,67 +84,78 @@ if __name__ == "__main__":
     if len(argv) <= 1:
         quit()
 
-    datafile = open(argv[1], 'r')
-    datalines = datafile.readlines()
-    datalines.pop(0)
-    
-    xtrain = []
-    ytrain = []
-    for datastr in datalines:
-        idxLastSep = datastr.rindex(',')
-        labelstr = datastr[idxLastSep+1:len(datastr)-1]
-        datastr = datastr[0: idxLastSep]
-        dataline = list(map(float, datastr.split(',')))
+    for onset in onsets:
+        # print('--------------------------------onset=', str(onset))
 
-        xtrain.append(dataline)
-        ytrain.append(labelstr)
+        # subprocess.call('python preprocess.py ' + argv[1] + ' ' + str(onset), shell=True)
+        # subprocess.call('mv p_' + argv[1] + ' p_' + argv[1] + '_' + str(onset), shell=True)
 
-    print('# of features:', len(xtrain[0]))
-    # print(ytrain)    
+        for f in rawfiles:
+            subprocess.call('python preprocess.py ' + f + ' ' + str(onset), shell=True)
+            
+        strcmd = 'python merge.py ' + 'onset_' + str(onset)
+        for f in rawfiles:
+            strcmd += ' p_' + f
+        subprocess.call(strcmd, shell=True)
 
-    ###################################################################################################
-    # train
-    
-    #
-    
-
-    rf = RandomForestClassifier() 
-
-    # random search
-    if search_type == RANDOM_SEARCH:
-        rf_random = RandomizedSearchCV(estimator = rf, param_distributions = RANDOM_GRID, 
-        n_iter = NITER, cv = CV, verbose=2, random_state=42, n_jobs = -1)
-        rf_random.fit(xtrain, ytrain)
-        print(rf_random.best_params_)
-        print(rf_random.best_score_)
-    # grid search
-    elif search_type == GRID_SEARCH:
-        grid_search = GridSearchCV(estimator = rf, param_grid = PARAM_GRID, cv = CV, 
-        n_jobs = -1, verbose = 2)
-        grid_search.fit(xtrain, ytrain)
-        print(grid_search.best_params_)
-        print(grid_search.best_score_)
-    # non search
-    else:
-        rf.fit(xtrain, ytrain)
-        scores = cross_val_score(rf, xtrain, ytrain, cv=20)
-        print("Base model accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
-        # {'bootstrap': False, 'max_depth': 350, 'max_features': 'log2', 'min_samples_leaf': 1, 'min_samples_split': 7, 'n_estimators': 100}
-        # {'bootstrap': False, 'max_depth': 300, 'max_features': 'log2', 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 200}
-        # {'n_estimators': 1400, 'min_samples_split': 10, 'min_samples_leaf': 1, 'max_features': 'auto', 'max_depth': 100, 'bootstrap': False}
-        # {'bootstrap': False, 'max_depth': 125, 'max_features': 'auto', 'min_samples_leaf': 1, 'min_samples_split': 6, 'n_estimators': 1400}
-        # {'bootstrap': True, 'max_depth': None, 'max_features': 'sqrt', 'min_samples_leaf': 3, 'min_samples_split': 6, 'n_estimators': 800}
-        # {'bootstrap': False, 'max_depth': 550, 'max_features': 'auto', 'min_samples_leaf': 1, 'min_samples_split': 6, 'n_estimators': 100}
-        # {'bootstrap': False, 'max_depth': 100, 'max_features': 'auto', 'min_samples_leaf': 8, 'min_samples_split': 10, 'n_estimators': 100}
-        {'bootstrap': True, 'max_depth': 325, 'max_features': None, 'min_samples_leaf': 5, 'min_samples_split': 7, 'n_estimators': 100}
-        # {'bootstrap': True, 'max_depth': 300, 'max_features': None, 'min_samples_leaf': 6, 'min_samples_split': 6, 'n_estimators': 100}
-
-        rf_tuned = RandomForestClassifier(n_estimators=100, min_samples_split=7, min_samples_leaf=5, max_features=None, max_depth=325, bootstrap=True)
+        datafile = open('m_onset_' + str(onset) + '.csv', 'r')
+        datalines = datafile.readlines()
+        datalines.pop(0)
         
-        rf_tuned.fit(xtrain, ytrain)
-        scores_tuned = cross_val_score(rf_tuned, xtrain, ytrain, cv=10)
-        print("Tuned model accuracy: %0.2f (+/- %0.2f)" % (scores_tuned.mean(), scores_tuned.std() * 2))
+        xtrain = []
+        ytrain = []
+        for datastr in datalines:
+            idxLastSep = datastr.rindex(',')
+            labelstr = datastr[idxLastSep+1:len(datastr)-1]
+            datastr = datastr[0: idxLastSep]
+            dataline = list(map(float, datastr.split(',')))
 
-    ###################################################################################################
-    # test
-    # 
+            xtrain.append(dataline)
+            ytrain.append(labelstr)
+
+        # print('# of features:', len(xtrain[0]))
+        # print(ytrain)    
+
+        ###################################################################################################
+        # train
+
+        rf = RandomForestClassifier() 
+
+        # random search
+        if search_type == RANDOM_SEARCH:
+            rf_random = RandomizedSearchCV(estimator = rf, param_distributions = RANDOM_GRID, 
+            n_iter = NITER, cv = CV, verbose=2, random_state=42, n_jobs = -1)
+            rf_random.fit(xtrain, ytrain)
+            print(rf_random.best_params_)
+            print(rf_random.best_score_)
+        # grid search
+        elif search_type == GRID_SEARCH:
+            grid_search = GridSearchCV(estimator = rf, param_grid = PARAM_GRID, cv = CV, 
+            n_jobs = -1, verbose = 2)
+            grid_search.fit(xtrain, ytrain)
+            print(grid_search.best_params_)
+            print(grid_search.best_score_)
+        # non search
+        else:
+            rf.fit(xtrain, ytrain)
+            # scores = cross_val_score(rf, xtrain, ytrain, cv=20)
+            # print("Base model accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
+            scoring = ['precision_macro', 'recall_macro']
+            scores = cross_validate(rf, xtrain, ytrain, scoring=scoring)
+            pre = scores['test_precision_macro'].mean()
+            rec = scores['test_recall_macro'].mean()
+            f1 = 2 * pre * rec / (pre+rec)
+            print(f1)
+            # {'bootstrap': False, 'max_depth': 350, 'max_features': 'log2', 'min_samples_leaf': 1, 'min_samples_split': 7, 'n_estimators': 100}
+            # {'bootstrap': False, 'max_depth': 300, 'max_features': 'log2', 'min_samples_leaf': 1, 'min_samples_split': 5, 'n_estimators': 200}
+            # {'n_estimators': 1400, 'min_samples_split': 10, 'min_samples_leaf': 1, 'max_features': 'auto', 'max_depth': 100, 'bootstrap': False}
+            # {'bootstrap': False, 'max_depth': 125, 'max_features': 'auto', 'min_samples_leaf': 1, 'min_samples_split': 6, 'n_estimators': 1400}
+            # {'bootstrap': True, 'max_depth': None, 'max_features': 'sqrt', 'min_samples_leaf': 3, 'min_samples_split': 6, 'n_estimators': 800}
+            # {'bootstrap': False, 'max_depth': 550, 'max_features': 'auto', 'min_samples_leaf': 1, 'min_samples_split': 6, 'n_estimators': 100}
+            # {'bootstrap': False, 'max_depth': 100, 'max_features': 'auto', 'min_samples_leaf': 8, 'min_samples_split': 10, 'n_estimators': 100}
+            # {'bootstrap': True, 'max_depth': 325, 'max_features': None, 'min_samples_leaf': 5, 'min_samples_split': 7, 'n_estimators': 100}
+            
+            # rf_tuned = RandomForestClassifier(n_estimators=100, min_samples_split=7, min_samples_leaf=5, max_features=None, max_depth=325, bootstrap=True)
+            # rf_tuned.fit(xtrain, ytrain)
+            # scores_tuned = cross_val_score(rf_tuned, xtrain, ytrain, cv=10)
+            # print("Tuned model accuracy: %0.2f (+/- %0.2f)" % (scores_tuned.mean(), scores_tuned.std() * 2))

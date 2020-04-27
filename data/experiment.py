@@ -27,7 +27,7 @@ touch_v_nearmuss_v_general = 'm_04241449_touch_nearmiss_notouch.csv'
 testingfiles = 'p1_all.csv', 'p2_all.csv', 'p3_all.csv', 'p_all.csv'
 
 
-cutpoints = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+cutpoints = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 # cutpoints = [1.0]
 
 def unpack(fn):
