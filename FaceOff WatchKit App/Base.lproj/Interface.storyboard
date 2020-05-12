@@ -2,7 +2,7 @@
 <document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="16096" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="S8r-Qp-yg8">
     <device id="watch38"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="16012"/>
     </dependencies>
     <scenes>
@@ -67,11 +67,14 @@
             <objects>
                 <controller id="1DT-va-9mu" customClass="FaceOffTesting" customModule="FaceOff_WatchKit_Extension">
                     <items>
-                        <switch width="1" alignment="left" title="Testing" id="zdI-8v-gD4">
+                        <switch width="1" alignment="left" hidden="YES" title="Testing" id="zdI-8v-gD4">
                             <connections>
                                 <action selector="testingToggled:" destination="1DT-va-9mu" id="gH2-4x-Zl5"/>
                             </connections>
                         </switch>
+                        <label width="136" height="124" alignment="left" text="Face Off!" textAlignment="center" id="zqD-fI-3eo">
+                            <fontDescription key="font" type="system" weight="black" pointSize="28"/>
+                        </label>
                         <label width="132" height="47" alignment="left" hidden="YES" text="Label" textAlignment="center" id="ivS-ig-xeU">
                             <fontDescription key="font" type="system" pointSize="20"/>
                         </label>
@@ -84,11 +87,12 @@
                     <connections>
                         <outlet property="btnCfmInstr" destination="Lb3-7E-0u0" id="0lj-jg-T76"/>
                         <outlet property="lbInstr" destination="ivS-ig-xeU" id="4OX-NB-4da"/>
+                        <outlet property="lbWarning" destination="zqD-fI-3eo" id="huN-xV-N63"/>
                         <outlet property="swTesting" destination="zdI-8v-gD4" id="iS0-jJ-QZx"/>
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="475" y="201.5"/>
+            <point key="canvasLocation" x="475" y="201"/>
         </scene>
     </scenes>
 </document>

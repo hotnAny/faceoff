@@ -1,86 +1,82 @@
 #!/usr/bin/env python
+
+# 
+# preprocessing data to extract features
+# 
+# usage: python preprocess.py <raw_data.csv>  t
+#   - t: optional, to indicate that cropping the time window to here, e.g., to t=1.0s
+# 
+
 from sys import argv
 import subprocess
 import math
 
+# HACK: expect an ideal raw data instance should have 150 values
 nexpected = 150
 
-if __name__ == "__main__":
-    # print(argv)
-    if len(argv) <= 1:
-        quit()
-
-    datafile = open(argv[1], 'r')
-    datalines = datafile.readlines()
-    strallins = ''
-
-    for datastr in datalines:
-        ##############################################################################
+def do_preprocess(datastr, onset):
+    ##############################################################################
         datains = []
 
         # split into data and label
         idxLastSep = datastr.rindex(',')
-        labelstr = datastr[idxLastSep+1:]
         datastr = datastr[0: idxLastSep]
         try:
             dataline = list(map(float, datastr.split(',')))
         except ValueError:
-            continue
+            return None
         n = int(len(dataline)/3)
 
         if n < nexpected * 0.75:
-            continue
-        
-        ### only look at the onset
-        if len(argv) == 3:
-            n = int(n*float(argv[2]))
-            dataline = dataline[0: n*3]
-            # print(n)
+            return None
 
-        ##############################################################################
-        # binning
-        nbins = 16
-        binsize = int(n / nbins + 0.9)
-        if binsize < 1:
-            continue
-        # print(binsize, "too few data points for binning!")
+        n = int(n*onset/1.5)
+        dataline = dataline[0: n*3]
 
-        bins = []
-        onebin = [0, 0, 0]
-        m = 0
-        for i in range(0, n):
-            onebin[0] += dataline[3 * i]
-            onebin[1] += dataline[3 * i+1]
-            onebin[2] += dataline[3 * i+2]
-            m += 1
+        # ##############################################################################
+        # # binning
+        # nbins = 16
+        # binsize = int(n / nbins + 0.9)
+        # if binsize < 1:
+        #     return None
+        # # print(binsize, "too few data points for binning!")
 
-            if (i+1) % binsize == 0 or (i+1 >= n and len(bins)/3 < nbins):
-                if m > 0:
-                    onebin[0] /= m
-                    onebin[1] /= m
-                    onebin[2] /= m
-                    bins.extend(onebin)
+        # bins = []
+        # onebin = [0, 0, 0]
+        # m = 0
+        # for i in range(0, n):
+        #     onebin[0] += dataline[3 * i]
+        #     onebin[1] += dataline[3 * i+1]
+        #     onebin[2] += dataline[3 * i+2]
+        #     m += 1
 
-                onebin = [0, 0, 0]
-                m = 0
+        #     if (i+1) % binsize == 0 or (i+1 >= n and len(bins)/3 < nbins):
+        #         if m > 0:
+        #             onebin[0] /= m
+        #             onebin[1] /= m
+        #             onebin[2] /= m
+        #             bins.extend(onebin)
 
-        l = int(len(bins)/3)
-        if l < nbins:
-            bins.extend(bins[l-3: l])
+        #         onebin = [0, 0, 0]
+        #         m = 0
 
-        if len(bins)/3 < nbins:
-            continue
-        # print(len(bins)/3, 'smaller than required # of bins')
+        # l = int(len(bins)/3)
+        # if l < nbins:
+        #     bins.extend(bins[l-3: l])
 
-        ##############################################################################
-        # sqrt of sum per bin
-        sumsqs = []
-        l = int(len(bins)/3)
-        for i in range(0, l):
-            x = bins[i]
-            y = bins[i+1]
-            z = bins[i+2]
-            sumsqs.append(math.sqrt(x*x + y*y + z*z))
+        # if len(bins)/3 < nbins:
+        #     return None
+        # # print(len(bins)/3, 'smaller than required # of bins')
+
+        # ##############################################################################
+        # # sqrt of sum per bin
+        # sumsqs = []
+        # l = int(len(bins)/3)
+        # for i in range(0, l):
+        #     x = bins[i]
+        #     y = bins[i+1]
+        #     z = bins[i+2]
+        #     sumsqs.append(math.sqrt(x*x + y*y + z*z))
         
 
         ##############################################################################
@@ -154,8 +150,10 @@ if __name__ == "__main__":
         # print(skewness, kurtosis)
         
         #############################################################################
+        # finally selecting features
 
         # datains.extend(bins)
+        # datains.extend(sumsqs)
         datains.extend(sums)
         datains.extend(means)
         datains.extend(sds)
@@ -167,27 +165,30 @@ if __name__ == "__main__":
         datains.extend(skewness)
         datains.extend(kurtosis)
 
-        # for only outputing a specific axis
-        # xdatains = datains[0::3]
-        # nx = len(xdatains)
-        # datains.extend(xdatains[int(nx*0.6):nx-1])
+        return datains
 
-        # ydatains = datains[1::3]
-        # ny = len(ydatains)
-        # datains.extend(ydatains[0:int(ny*0.2)])
+if __name__ == "__main__":
+    if len(argv) <= 1:
+        quit()
+    elif len(argv) <= 2:
+        argv.append(1.0)
 
-        # zdatains = datains[2::3]
-        # nz = len(zdatains)
-        # datains.extend(zdatains[0:int(nz*0.2)])
+    datafile = open(argv[1], 'r')
+    datalines = datafile.readlines()
+    strallins = ''
 
-        # datains.extend(sumsqs)
-
-        # print(datains)
-
+    # for each raw instance, extract features and attach a label to it
+    for datastr in datalines:
+        datains = do_preprocess(datastr, float(argv[2]))
+        if datains==None:
+            continue
+        idxLastSep = datastr.rindex(',')
+        labelstr = datastr[idxLastSep+1:]
         for x in datains:
             strallins += "{:.3f}".format(x) + ','
         strallins += labelstr.strip() + '\n'
 
+    # create header
     strheader = ""
     for i in range(0, len(datains)):
         strheader += 'f' + str(i) + ','
