@@ -56,16 +56,7 @@ func preproc(_ rawdata: [Float]) -> [Float] {
 
 func classifyByRule(_ data : [Float]) -> Bool {
     var isTouching :Bool;
-//    if data[15] <= -0.563 && data[0] >= -0.262 {
-//        isTouching = true
-//    } else {
-//        isTouching = false
-//    }
-//    if data[18] <= -0.58 && data[3] >= -0.46 {
-//        isTouching = true
-//    } else {
-//        isTouching = false
-//    }
+
     if data[24] <= -0.821 {
         isTouching = true
     } else if data[15] < -0.568 && data[0] >= 0.031 {

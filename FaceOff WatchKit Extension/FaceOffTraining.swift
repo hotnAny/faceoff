@@ -44,10 +44,6 @@ class FaceOffTraining: WKInterfaceController{
     // behavior
     var isTouching = true
     var isWild = false
-//    var sides = ["Left", "Right"]
-//    var partsTouched = ["Hair", "Nose", "Chin", "Eye", "Ear", "Forehead", "Cheek", "Temple", "Mouth"]
-//    var how = ["Transiently", "Lingeringly"]
-//    var nearMisses = ["Adjust eyeglasses", "Raise hand(s)", "Eat", "Drink", "Listen to cellphone"]
     
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)

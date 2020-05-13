@@ -6,6 +6,22 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="16012"/>
     </dependencies>
     <scenes>
+        <!--Face Off Demo-->
+        <scene sceneID="cTh-PR-uic">
+            <objects>
+                <controller id="omu-l0-lQD" customClass="FaceOffDemo" customModule="FaceOff_WatchKit_Extension">
+                    <items>
+                        <label width="136" alignment="left" verticalAlignment="center" text="Face Off!" textAlignment="center" id="QXq-cH-X8p">
+                            <fontDescription key="font" type="boldSystem" pointSize="28"/>
+                        </label>
+                    </items>
+                    <connections>
+                        <outlet property="lbWarning" destination="QXq-cH-X8p" id="3si-mQ-Os9"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="563" y="388"/>
+        </scene>
         <!--Face Off Training-->
         <scene sceneID="mUz-TF-bdY">
             <objects>
@@ -38,21 +54,26 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="488" y="-70"/>
+            <point key="canvasLocation" x="563" y="-231"/>
         </scene>
         <!--Face Off-->
         <scene sceneID="bKa-le-8VO">
             <objects>
                 <controller id="S8r-Qp-yg8" customClass="FaceOff" customModule="FaceOff_WatchKit_Extension">
                     <items>
-                        <button width="1" height="64" alignment="left" verticalAlignment="center" title="Training" id="biH-EI-NTL">
-                            <fontDescription key="font" type="system" pointSize="24"/>
+                        <button width="1" alignment="left" verticalAlignment="bottom" title="demo" id="HQy-fL-iOz">
+                            <connections>
+                                <segue destination="omu-l0-lQD" kind="push" id="Dmx-20-P75"/>
+                            </connections>
+                        </button>
+                        <button width="1" alignment="left" title="collect training data" id="biH-EI-NTL">
+                            <fontDescription key="font" style="UICTFontTextStyleBody"/>
                             <connections>
                                 <segue destination="GVU-yr-cuI" kind="push" id="DNR-fg-cck"/>
                             </connections>
                         </button>
-                        <button width="1" height="64" alignment="left" verticalAlignment="center" title="Testing" id="4vx-p3-5uE">
-                            <fontDescription key="font" type="system" pointSize="24"/>
+                        <button width="1" alignment="left" verticalAlignment="center" title="collect testing data" id="4vx-p3-5uE">
+                            <fontDescription key="font" style="UICTFontTextStyleBody"/>
                             <connections>
                                 <segue destination="1DT-va-9mu" kind="push" id="wxU-TV-i16"/>
                             </connections>
@@ -72,9 +93,6 @@
                                 <action selector="testingToggled:" destination="1DT-va-9mu" id="gH2-4x-Zl5"/>
                             </connections>
                         </switch>
-                        <label width="136" height="124" alignment="left" text="Face Off!" textAlignment="center" id="zqD-fI-3eo">
-                            <fontDescription key="font" type="system" weight="black" pointSize="28"/>
-                        </label>
                         <label width="132" height="47" alignment="left" hidden="YES" text="Label" textAlignment="center" id="ivS-ig-xeU">
                             <fontDescription key="font" type="system" pointSize="20"/>
                         </label>
@@ -87,12 +105,11 @@
                     <connections>
                         <outlet property="btnCfmInstr" destination="Lb3-7E-0u0" id="0lj-jg-T76"/>
                         <outlet property="lbInstr" destination="ivS-ig-xeU" id="4OX-NB-4da"/>
-                        <outlet property="lbWarning" destination="zqD-fI-3eo" id="huN-xV-N63"/>
                         <outlet property="swTesting" destination="zdI-8v-gD4" id="iS0-jJ-QZx"/>
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="475" y="201"/>
+            <point key="canvasLocation" x="563" y="87"/>
         </scene>
     </scenes>
 </document>

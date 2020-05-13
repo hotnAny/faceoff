@@ -20,7 +20,14 @@ final class FaceOffConfig {
     static let HOW = ["Transiently", "Lingeringly"]
     static let NEARMISSES = ["Eyeglasses", "Raise hand", "Eat", "Drink", "Pick up phone"]
     
+//    participant-specified touching facial areas
+    
+//    p1
 //    static let UPARTSTOUCHED = ["Backhead", "Nose", "Chin", "Eye", "Ear"]
+    
+//    p2
 //    static let UPARTSTOUCHED = ["Hair", "Nose", "Chin", "Cheek", "Ear"]
+    
+//    p3
     static let UPARTSTOUCHED = ["Forehead", "Nose", "Cheek", "Eye", "Ear"]
 }

@@ -93,3 +93,41 @@ import Foundation
                //                    self.testingToggled(false)
                //                    // print(Int64(FaceOff.getCurrentMillis() - self.timeTestingStarted) / 1000)
                //                }
+
+
+//
+              // code from hongyan
+              //
+              // data processing and model inference
+              // convert data to MulArray dtype
+              //            guard let mlMultiArray = try? MLMultiArray(shape:[30], dataType:MLMultiArrayDataType.double) else {
+              //                fatalError("Unexpected runtime error. MLMultiArray")
+              //            }
+              //            for (index, element) in data.enumerated() {
+              //                mlMultiArray[index] = NSNumber(floatLiteral: Double(element))
+              //            }
+              //            // predict the data
+              //            guard let modelPrediction = try? self.nnModel.prediction(acc_data: mlMultiArray) else {
+              //                fatalError("Unexpected runtime error.")
+              //            }
+              //            // convert to decision
+              //            let classPrediction = modelPrediction.class_
+              //
+              //            // for debug
+              //            //                print(classPrediction)
+              //
+              //            // convert class to array
+              //            let decision_array = classPrediction
+              //            let length = classPrediction.count
+              //            let doublePtr =  decision_array.dataPointer.bindMemory(to: Double.self, capacity: length)
+              //            let doubleBuffer = UnsafeBufferPointer(start: doublePtr, count: length)
+              //            let output = Array(doubleBuffer)
+              //
+              //            //print(output)
+              //
+              //            // need to verify which index in no touching and which is touching
+              //
+              //            if (Double)(output.max() ?? 0) > 0.9 {
+              
+              // find which class has the highest prob
+              //                let max_ind = output.firstIndex(of: output.max()!)

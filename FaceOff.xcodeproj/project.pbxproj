@@ -23,6 +23,7 @@
 		1F8F5E50242C0BB70048654A /* FaceOffTesting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8F5E4F242C0BB70048654A /* FaceOffTesting.swift */; };
 		1F8F5E53242C0C780048654A /* FaceOffConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8F5E52242C0C780048654A /* FaceOffConfig.swift */; };
 		1F8F5E57242C20590048654A /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F8F5E56242C20590048654A /* HealthKit.framework */; };
+		1FBA87D8246B75F9009C64E0 /* FaceOffDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBA87D7246B75F9009C64E0 /* FaceOffDemo.swift */; };
 		1FD548DF2447983700DFE083 /* FaceOffRecycled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD548DE2447983700DFE083 /* FaceOffRecycled.swift */; };
 /* End PBXBuildFile section */
 
@@ -90,6 +91,7 @@
 		1F8F5E52242C0C780048654A /* FaceOffConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceOffConfig.swift; sourceTree = "<group>"; };
 		1F8F5E54242C20590048654A /* FaceOff WatchKit Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "FaceOff WatchKit Extension.entitlements"; sourceTree = "<group>"; };
 		1F8F5E56242C20590048654A /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS6.1.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
+		1FBA87D7246B75F9009C64E0 /* FaceOffDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceOffDemo.swift; sourceTree = "<group>"; };
 		1FD548DE2447983700DFE083 /* FaceOffRecycled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceOffRecycled.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -149,10 +151,11 @@
 				1F56DFF524293C2A00E73ED5 /* PushNotificationPayload.apns */,
 				1F56DFF124293C2A00E73ED5 /* Preview Content */,
 				1F56E0032429730500E73ED5 /* FaceOffTraining.swift */,
-				1F8F5E4B242AB6C90048654A /* FaceOffLearner.swift */,
 				1F8F5E4F242C0BB70048654A /* FaceOffTesting.swift */,
+				1FBA87D7246B75F9009C64E0 /* FaceOffDemo.swift */,
 				1FD548DE2447983700DFE083 /* FaceOffRecycled.swift */,
 				1F8F5E52242C0C780048654A /* FaceOffConfig.swift */,
+				1F8F5E4B242AB6C90048654A /* FaceOffLearner.swift */,
 			);
 			path = "FaceOff WatchKit Extension";
 			sourceTree = "<group>";
@@ -306,6 +309,7 @@
 				1FD548DF2447983700DFE083 /* FaceOffRecycled.swift in Sources */,
 				1F56DFEC24293C2900E73ED5 /* NotificationController.swift in Sources */,
 				1F8F5E50242C0BB70048654A /* FaceOffTesting.swift in Sources */,
+				1FBA87D8246B75F9009C64E0 /* FaceOffDemo.swift in Sources */,
 				1F56E0042429730500E73ED5 /* FaceOffTraining.swift in Sources */,
 				1F56DFEA24293C2900E73ED5 /* ExtensionDelegate.swift in Sources */,
 				1F8F5E4E242C08B80048654A /* FaceOff.swift in Sources */,

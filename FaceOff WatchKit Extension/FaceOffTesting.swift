@@ -10,7 +10,7 @@ import WatchKit
 import Foundation
 import CoreMotion
 import HealthKit
-import CoreML
+//import CoreML
 
 class FaceOffTesting: WKInterfaceController {
     
@@ -28,9 +28,6 @@ class FaceOffTesting: WKInterfaceController {
     
     // timing
     let TIMEWINDOW = FaceOffConfig.TIMEWINDOW
-    
-    // ml
-    //    let nnModel = nnclf()
     
     // user testing
     let ISDRYRUN = false
@@ -58,6 +55,8 @@ class FaceOffTesting: WKInterfaceController {
         print("debugger is working!")
         
         motionManager.accelerometerUpdateInterval = 1 / SAMPLINGRATE //0.01s
+        
+        swTesting.setHidden(false)
     }
     
     override func willActivate() {
@@ -82,9 +81,9 @@ class FaceOffTesting: WKInterfaceController {
                 return
             }
             
-//            if !self.isTesting {
-//                return
-//            }
+            if !self.isTesting {
+                return
+            }
             
             //
             // look backwards to gather sensor data in the last TIMEWINDOW
@@ -108,55 +107,50 @@ class FaceOffTesting: WKInterfaceController {
             }
             
             //
-            //  making inference
-            //
-            self.makeInference(bufAccel: bufAccel)
-            
-            //
             // collect data labeled as face touching
             //
-//            let timeSinceLastAction = FaceOff.getCurrentMillis()-self.timeLastAction
-//            if timeSinceLastAction < self.windowDataCollection {
-//                print(FaceOff.stringize(bufAccel) + "Touching")
-//                self.touchOngoing = true
-//
-//            } else if self.cntdownAction == -1 {
-//
-//                // if a face touching just took place, update to the next face touching part
-//                if self.touchOngoing {
-//                    Timer.scheduledTimer(withTimeInterval: TimeInterval(self.intervalNextTouch), repeats: false) { timer in
-//                        self.clsAction = self.getNextAction()
-//                        self.lbInstr.setText(self.clsAction)
-//                        self.btnCfmInstr.setTitle("Got it!")
-//                        for _ in 1...6 {
-//                            WKInterfaceDevice.current().play(.notification)
-//                        }
-//                    }
-//                    self.touchOngoing = false
-//                }
-//
-//                // collect data labeled as non face touching
-//                print(FaceOff.stringize(bufAccel) + "No Touching")
-//                self.timeLastNonActionMark = FaceOff.getCurrentMillis()
-//
-//            }
-//
-//            //
-//            // count down for a face touching action
-//            //
-//            let n = self.prepTimeForTouch / (1000 / Int(self.INFERENCERATE))
-//            if self.cntdownAction == n {
-//                self.countActions += 1
-//                print("Action #" + String(self.countActions) + " do something")
-//                // 2nd vibration
-//                for _ in 1...32 {
-//                    WKInterfaceDevice.current().play(.notification)
-//                }
-//                self.timeLastAction = FaceOff.getCurrentMillis()
-//                self.cntdownAction = -1
-//            } else if self.cntdownAction >= 0 {
-//                self.cntdownAction += 1
-//            }
+            let timeSinceLastAction = FaceOff.getCurrentMillis()-self.timeLastAction
+            if timeSinceLastAction < self.windowDataCollection {
+                print(FaceOff.stringize(bufAccel) + "Touching")
+                self.touchOngoing = true
+                
+            } else if self.cntdownAction == -1 {
+                
+                // if a face touching just took place, update to the next face touching part
+                if self.touchOngoing {
+                    Timer.scheduledTimer(withTimeInterval: TimeInterval(self.intervalNextTouch), repeats: false) { timer in
+                        self.clsAction = self.getNextAction()
+                        self.lbInstr.setText(self.clsAction)
+                        self.btnCfmInstr.setTitle("Got it!")
+                        for _ in 1...6 {
+                            WKInterfaceDevice.current().play(.notification)
+                        }
+                    }
+                    self.touchOngoing = false
+                }
+                
+                // collect data labeled as non face touching
+                print(FaceOff.stringize(bufAccel) + "No Touching")
+                self.timeLastNonActionMark = FaceOff.getCurrentMillis()
+                
+            }
+            
+            //
+            // count down for a face touching action
+            //
+            let n = self.prepTimeForTouch / (1000 / Int(self.INFERENCERATE))
+            if self.cntdownAction == n {
+                self.countActions += 1
+                print("Action #" + String(self.countActions) + " do something")
+                // 2nd vibration
+                for _ in 1...32 {
+                    WKInterfaceDevice.current().play(.notification)
+                }
+                self.timeLastAction = FaceOff.getCurrentMillis()
+                self.cntdownAction = -1
+            } else if self.cntdownAction >= 0 {
+                self.cntdownAction += 1
+            }
         }
         
         let handler:CMAccelerometerHandler = {(data: CMAccelerometerData?, error: Error?) -> Void in
@@ -221,62 +215,4 @@ class FaceOffTesting: WKInterfaceController {
         return clsAction
     }
     
-    func makeInference(bufAccel: [Float]) {
-        let data = preproc(bufAccel)
-        if data.count == NFEATURES {
-            
-            //
-            // code from hongyan
-            //
-            // data processing and model inference
-            // convert data to MulArray dtype
-            //            guard let mlMultiArray = try? MLMultiArray(shape:[30], dataType:MLMultiArrayDataType.double) else {
-            //                fatalError("Unexpected runtime error. MLMultiArray")
-            //            }
-            //            for (index, element) in data.enumerated() {
-            //                mlMultiArray[index] = NSNumber(floatLiteral: Double(element))
-            //            }
-            //            // predict the data
-            //            guard let modelPrediction = try? self.nnModel.prediction(acc_data: mlMultiArray) else {
-            //                fatalError("Unexpected runtime error.")
-            //            }
-            //            // convert to decision
-            //            let classPrediction = modelPrediction.class_
-            //
-            //            // for debug
-            //            //                print(classPrediction)
-            //
-            //            // convert class to array
-            //            let decision_array = classPrediction
-            //            let length = classPrediction.count
-            //            let doublePtr =  decision_array.dataPointer.bindMemory(to: Double.self, capacity: length)
-            //            let doubleBuffer = UnsafeBufferPointer(start: doublePtr, count: length)
-            //            let output = Array(doubleBuffer)
-            //
-            //            //print(output)
-            //
-            //            // need to verify which index in no touching and which is touching
-            //
-            //            if (Double)(output.max() ?? 0) > 0.9 {
-            
-            // find which class has the highest prob
-            //                let max_ind = output.firstIndex(of: output.max()!)
-            if classifyByRule(data){
-                print("Don't touch your face!")
-//                print(classPrediction)
-                for _ in 1...12 {
-                    WKInterfaceDevice.current().play(.notification)
-                }
-                self.lbWarning.setAlpha(1.0)
-                self.alphaWarning = 1.0
-                self.bufAccel = []
-                self.readyForInferencing = false
-            } else {
-                self.alphaWarning *= 0.95
-                self.lbWarning.setAlpha(self.alphaWarning)
-            }
-            
-        }
-        
-    }
 }
