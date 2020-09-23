@@ -16,5 +16,14 @@ All data files end with '.csv':
 * `featurize.py` featurizes raw data using `preprocess.py` and merges different sessions' data using `merge.py`;
 * `tunehyperparam.py` tunes hyperparameters for random forest models.
 
+## Citation
+> Chen, X.A., 2020. FaceOff: Detecting Face Touching with a Wrist-Worn Accelerometer. arXiv preprint arXiv:2008.01769.
 
-
+```
+@article{chen2020faceoff,
+  title={FaceOff: Detecting Face Touching with a Wrist-Worn Accelerometer},
+  author={Chen, Xiang'Anthony'},
+  journal={arXiv preprint arXiv:2008.01769},
+  year={2020}
+}
+```
