@@ -36,14 +36,14 @@ onsets = [
     1.0, 1.1, 1.2, 1.3, 1.4, 1.5
     ]
 # baseline:
-# onsets = [1.1]
+# onsets = [1.5]
 
 # training sets to be tested
 training_sets = [
     'm_onset_1.0.csv', 'm_onset_1.1.csv',  'm_onset_1.2.csv',  'm_onset_1.3.csv', 'm_onset_1.4.csv', 'm_onset_1.5.csv'
     ]
 # baseline:
-# training_sets = ['m_onset_1.1.csv']
+# training_sets = ['m_onset_1.5.csv']
 
 # to store models created for each training set
 model_sets = []
@@ -189,16 +189,18 @@ def do_test(testing_sets):
         nfp = 0
         infer_rate = 4
         wind_size = 1.5
-        nskip = infer_rate * wind_size  # how many samples in a time window
+        nskip = infer_rate * wind_size * 3  # face touches in 5 sec are bundled as one trial 
         cntr_skip = 0
         cntr_progress = 0
+
+        last_touch = 0
 
         for datastr in xtest_nontouches:
             # after detecting a face touching, skip the next time window 
             # (can't have two touches in one time window)
-            if cntr_skip > 0:
-                cntr_skip -= 1
-                continue
+            # if cntr_skip > 0:
+            #     cntr_skip -= 1
+            #     continue
             
             vote = 0
             for i in range(0, len(onsets)):
@@ -220,8 +222,10 @@ def do_test(testing_sets):
                     break
 
             if vote > bias:
-                nfp += 1
-                cntr_skip = nskip
+                if cntr_progress - last_touch > nskip:
+                    nfp += 1
+                # cntr_skip = nskip
+                last_touch = cntr_progress
             
             cntr_progress += 1
             print("%3d%%" % int(cntr_progress * 100 / len(xtest_nontouches)), end='\r')
